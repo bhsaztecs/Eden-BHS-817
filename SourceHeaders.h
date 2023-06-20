@@ -1,0 +1,14 @@
+#include <kipr/wombat.h>
+#include <math.h>
+#include <stdio.h>
+#include <assert.h>	
+#include <float.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <ctype.h>
+#include <string.h>
+#include <limits.h>
+#include <time.h>
+#include <stddef.h>	
+#include <locale.h>
+#include <stdlib.h>
