@@ -2,17 +2,10 @@
 using namespace UsOS;
 void Tournament();
 void Initialize();
-
+//getsetpid!!!!
 int main() {
 	Initialize();
 	//Tournament();
-	Motor.Standard.Brake();
-	Motor.Standard.Speed.Tank(10, 10, 10);
-	Servo.Set(90, 0);
-	Servo.Set(0, 0);
-	Motor.Standard.Speed.Tank(10, 10, 10);
-	Servo.Set(90, 90);
-	Pathfind.Artemis.GoTo(10, 24, 10);
 	return 0;
 }
 
@@ -43,4 +36,7 @@ void Initialize() {
 	CurrentY = 0;
 	using namespace UsOS;
 	worldspace Pipe1(5, 12, 5);
+    
+    newthread Vel(bknd::Velocity);
+    Vel.run();
 }

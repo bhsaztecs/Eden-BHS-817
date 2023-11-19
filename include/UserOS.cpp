@@ -429,7 +429,7 @@ namespace UsOS {
 		}
 	};
 	worldspace Location;
-	other Screen;
+	other Misc;
 	pathfinding Pathfind;
 	sensor Sensor;
 	servo Servo;

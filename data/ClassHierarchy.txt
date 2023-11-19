@@ -1,6 +1,6 @@
 Bot
 	Location
-		Position (Worldspace)
+		Position
 	Other
 		Console
 			Log()
@@ -36,17 +36,14 @@ Bot
 	Sensor
 		Internal
 			Accelerometer
-				Magnitude()
 				Callibrate()
 				Pitch()
 				Yaw()
 			Gyroscope
-				Magnitude()
 				Callibrate()
 				Pitch()
 				Yaw()
 			Magnetometer
-				Magnitude()
 				Callibrate()
 				Pitch()
 				Yaw()
