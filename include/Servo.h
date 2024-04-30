@@ -1,28 +1,35 @@
 #pragma once
 #include "Basic.h"
-void servos::Set(float armAngle, float clawAngle = TTDC(get_servo_position(ClawServo))) {
-	DLOG
-        enable_servos();
-		set_servo_position(ArmServo, DTTA(armAngle));
-	set_servo_position(ClawServo, DTTC(clawAngle));
-    disable_servos();
-}
-void servos::Change(float changeInArmAngle, float changeInClawAngle) {
-	DLOG
-		int curA = TTDA(get_servo_position(ArmServo));
-	int curC = TTDC(get_servo_position(ClawServo));
-	int posA = curA + changeInArmAngle;
-	int posC = curC + changeInClawAngle;
 
-	servos::Set(posA, posC);
+void servos::Set(float armAngle, float clawAngle = TTDC(get_servo_position(ClawServo))) {
+  DLOG
+    set_servo_position(ArmServo, DTTA(armAngle));
+  set_servo_position(ClawServo, DTTC(clawAngle));
+}
+void servos::Change(float changeInArmAngle, float changeInClawAngle = 0) {
+  DLOG
+    int curA = TTDA(get_servo_position(ArmServo));
+  int curC = TTDC(get_servo_position(ClawServo));
+  int posA = curA + changeInArmAngle;
+  int posC = curC + changeInClawAngle;
+
+  servos::Set(posA, posC);
 }
 void servos::Move(float armAngle, float timeInSeconds) {
-	DLOG
-		int curPos = TTDA(get_servo_position(ArmServo));
-	int direction = armAngle - curPos;
-    direction = direction/abs(direction);
-	for ( float i = curPos; i != armAngle; i += direction ) {
-		servos::Set(i);
-		msleep(timeInSeconds/10);
-	}
+  DLOG
+    int curAng = get_servo_position(ArmServo);
+  armAngle = DTTA(armAngle);
+  int it = armAngle - curAng;
+  if ( it > 0 ) {
+    for ( int a = curAng; a < armAngle; a += 10 ) {
+      Set(TTDA(a));
+      Wait(abs(timeInSeconds / it) * 10);
+    }
+  }
+  else {
+    for ( int a = curAng; a > armAngle; a -= 10 ) {
+      Set(TTDA(a));
+      Wait(abs(timeInSeconds / it) * 10);
+    }
+  }
 }

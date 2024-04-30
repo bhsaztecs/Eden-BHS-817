@@ -1,12 +1,4 @@
-To use: 
-
-  Eve (Roomba interface)
-  Import EdenCommon UserOS.h & Backend.h
-  Import Eve Backend.h (Overrides Eden backend)
-  Run.cpp is the entry point.
-  
-  Adam (Wombat interface)
-  Import EdenCommon UserOS.h & Backend.h
-  Import Adam Backend.h (Overrides Eden backend)
-  Run.cpp is the entry point.
-Backend is complicated and annoying and technical. for most users, the UserOS abstraction layer should be suffice. Despite this, the backend classes are public and usable, even if not recommended.
+Eden is a multi-platform cross compatible library that interfaces with a standard roomba (create 2) and wombat.
+The end goal is to have a single library that allows a 1-to-1 translation from both platforms (after a unit conversion is adjusted, as well as certain measurements)
+currently, the library is cross compatible, but NOT 1-to-1. 
+Check Formalities for license and other information.
