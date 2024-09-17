@@ -2,17 +2,11 @@
 #include "Basic.h"
 void motors::ClearMotorRotations() {
   DLOG
-    if ( isCreate ) {
-      return;
-    }
   cmpc(LeftMotor);
   cmpc(RightMotor);
 }
 void motors::Velocity() {
   DLOG
-    if ( isCreate ) {
-      return;
-    }
   while ( 1 ) {
     float VLo = gmpc(LeftMotor);
     float VRo = gmpc(RightMotor);
@@ -28,11 +22,6 @@ void motors::Velocity() {
 }
 void motors::Speed(float LeftPercent, float RightPercent, float TimeInSeconds) {
   DLOG
-    if ( isCreate ) {
-      create_drive_direct(LeftPercent * -5 * LMM, RightPercent * -5 * RMM);
-      msleep(TimeInSeconds * TimeMultiplier * 1000);
-      return;
-    }
   float Lo = TTIW(gmpc(LeftMotor));
   float Ro = TTIW(gmpc(RightMotor));
   motor(LeftMotor, (LeftPercent * LMM));
@@ -52,9 +41,6 @@ void motors::Rotation(float LeftDegrees, float RightDegrees, float TimeInSeconds
 }
 void motors::Distance(float LeftInches, float RightInches, float TimeInSeconds) {
   DLOG
-    if ( isCreate ) {
-      return;
-    }
   float Ls = float((ITTW(LeftInches / TimeInSeconds)) / 15);
   float Rs = float((ITTW(RightInches / TimeInSeconds)) / 15);
   Speed(Ls, Rs, TimeInSeconds);

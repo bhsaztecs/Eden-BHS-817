@@ -1,35 +1,4 @@
 #pragma once
-/* EXAMPLE
-#include "Basic.h"
-misc Misc;
-motors Tank(0,0);
-pathFind Athena();
-sensors Sensor(1);
-servos Arm(0,1);
-
-int main()
-{
-    isCreate = true;
-    Misc.Start(false);
-    return 0;
-}
-*/
-
-
-/* 
-* TODO LIST
-* Motor 5
-* Motor 13
-* Basic 439
-* Basic 447
-* Basic 455
-* Basic 463
-* Basic 471
-* Basic 479
-*/
-
-
-bool isCreate = false;
 
 #include </kipr/wombat.h>
 #include <iostream>
@@ -436,49 +405,31 @@ float inch(float mm) {
 */
 int DTTW(float degrees) {
   DLOG
-    if ( isCreate ) {
-      return 1;
-    }
   return degrees * 5.55;
 }
 
 float TTDW(int ticks) {
   DLOG
-    if ( isCreate ) {
-      return 1;
-    }
   return ticks / 5.55;
 }
 
 float DTIW(float degrees) {
   DLOG
-    if ( isCreate ) {
-      return 1;
-    }
   return WheelRadius * Rad(degrees);
 }
 
 float ITDW(float inches) {
   DLOG
-    if ( isCreate ) {
-      return 1;
-    }
   return Deg(WheelRadius / inches);
 }
 
 float TTIW(int ticks) {
   DLOG
-    if ( isCreate ) {
-      return 1;
-    }
   return ticks / 206.49999936;
 }
 
 int ITTW(float inches) {
   DLOG
-    if ( isCreate ) {
-      return 1;
-    }
   return inches * 206.49999936;
 }
 /***********************/

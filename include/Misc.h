@@ -333,17 +333,6 @@ void misc::Status(char one, char two, char three) {
 }
 void misc::Start(bool tournament, bool debug = false) {
   Debugging = debug;
-  if ( isCreate ) {
-    for ( int i = 1; i < 10; i++ ) {
-      if ( create_connect_once() ) {
-        std::cout << "connection attempt " << i << " success" << std::endl;
-      }
-      else {
-        std::cout << "connection attempt " << i << " failed" << std::endl;
-        msleep(100);
-      }
-    }
-  }
   newThread Vel(motors::Velocity);
   Vel.Run();
 
