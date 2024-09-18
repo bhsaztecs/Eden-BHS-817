@@ -1,10 +1,13 @@
-class thread {
-};
+#include <cmath>
+class thread {};
 
-thread thread_create(void()) { thread temp; return temp; }
-void thread_start(thread&) {}
-void thread_wait(thread&) {}
-void thread_destroy(thread&) {}
+thread thread_create(void()) {
+  thread temp;
+  return temp;
+}
+void thread_start(thread &) {}
+void thread_wait(thread &) {}
+void thread_destroy(thread &) {}
 void msleep(double) {}
 void shut_down_in(int) {}
 int accel_x() { return 1; }
@@ -28,6 +31,8 @@ int c_button() { return 1; }
 int x_button() { return 1; }
 int y_button() { return 1; }
 int z_button() { return 1; }
+int any_button() { return 1; }
+int any_button_clicked() { return 1; }
 int a_button_clicked() { return 1; }
 int b_button_clicked() { return 1; }
 int c_button_clicked() { return 1; }
@@ -49,3 +54,4 @@ void ao() {}
 void disable_servos() {}
 void enable_servos() {}
 void wait_for_light(int) {}
+void console_clear() {}

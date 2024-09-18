@@ -118,8 +118,8 @@ public:
     this->X = x;
     this->Y = y;
   }
-  float Magnitude() { return sqrt(pow(X, 2) + pow(Y, 2)); }
-  float Angle() { return Deg(atan2(Y, X)); }
+  float Magnitude() { return std::sqrt(std::pow(X, 2) + std::pow(Y, 2)); }
+  float Angle() { return Deg(std::atan2(Y, X)); }
   P2D operator-(const P2D &other) {
     return P2D(this->X - other.X, this->Y - other.Y);
   }
@@ -154,9 +154,11 @@ public:
     this->Y = y;
     this->Z = z;
   }
-  float Magnitude() { return sqrt(pow(X, 2) + pow(Y, 2) + pow(Z, 2)); }
-  float Pitch() { return Deg(atan(Y / Z)); }
-  float Yaw() { return Deg(atan(X / Z)); }
+  float Magnitude() {
+    return std::sqrt(std::pow(X, 2) + std::pow(Y, 2) + std::pow(Z, 2));
+  }
+  float Pitch() { return Deg(std::atan(Y / Z)); }
+  float Yaw() { return Deg(std::atan(X / Z)); }
   P3D operator-(const P3D &other) {
     return P3D(this->X - other.X, this->Y - other.Y, this->Z - other.Z);
   }
@@ -393,8 +395,9 @@ public:
 };
 
 float Interpolate(float timePercent, float delta) {
-  DLOG return (pow(timePercent, 2.16) /
-               (pow(timePercent, 2.16) + (pow((1 - timePercent), 2.16)))) *
+  DLOG return (
+      std::pow(timePercent, 2.16) /
+      (std::pow(timePercent, 2.16) + (std::pow((1 - timePercent), 2.16)))) *
       delta;
 }
 
