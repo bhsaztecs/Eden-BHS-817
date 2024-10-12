@@ -1,0 +1,6 @@
+# Ignore everything inside /code/kipr but not other content in /code
+/code/kipr/
+
+# Ignore binaries (for Linux and macOS)
+*.o
+*.exe
