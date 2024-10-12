@@ -1,12 +1,12 @@
 #pragma once
-#include "Basic.h"
+#include "basic.h"
 void AthenaDecision(float deltaL, float deltaR) {
-  DLOG
-    if ( MarginOfError(abs(deltaL), abs(deltaR), AthenaMargin) && (deltaL != deltaR) ) {
-      AngularPathfind(deltaL, deltaR);
-      return;
-    }
-  if ( MarginOfError(deltaL, deltaR, AthenaMargin) ) {
+  DLOG if (MarginOfError(abs(deltaL), abs(deltaR), AthenaMargin) &&
+           (deltaL != deltaR)) {
+    AngularPathfind(deltaL, deltaR);
+    return;
+  }
+  if (MarginOfError(deltaL, deltaR, AthenaMargin)) {
     LinearPathfind(deltaL, deltaR);
     return;
   }
@@ -15,16 +15,14 @@ void AthenaDecision(float deltaL, float deltaR) {
 }
 
 void AngularPathfind(float deltaL, float deltaR) {
-  DLOG
-    float Wa = (abs(deltaL) + abs(deltaR)) / 2;
+  DLOG float Wa = (abs(deltaL) + abs(deltaR)) / 2;
   float Ooffset = Wa / TurnRate;
 
   Position.O += Ooffset;
 }
 
 void LinearPathfind(float deltaL, float deltaR) {
-  DLOG
-    float Distance = DTIW((deltaL + deltaR) / 2);
+  DLOG float Distance = DTIW((deltaL + deltaR) / 2);
   P2D delta(Distance * cos(Position.O), Distance * sin(Position.O));
 
   Position.X += delta.X;
@@ -32,8 +30,7 @@ void LinearPathfind(float deltaL, float deltaR) {
 }
 
 void DynamicPathfind(float deltaL, float deltaR) {
-  DLOG
-    float c = (deltaL + deltaR) / (deltaL - deltaR);
+  DLOG float c = (deltaL + deltaR) / (deltaL - deltaR);
   float a = (deltaL + deltaR) / 2;
   float theta = a / abs(c);
   P2D prime(abs(c) * cos(theta), abs(c) * sin(theta));
@@ -43,8 +40,7 @@ void DynamicPathfind(float deltaL, float deltaR) {
 }
 
 void pathFind::Face(float deg, float time) {
-  DLOG
-    worldSpace temp = Position;
+  DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
   float DeltaO = Rad(deg) - Position.O;
@@ -53,8 +49,7 @@ void pathFind::Face(float deg, float time) {
   Position += temp;
 }
 void pathFind::GoTo(float x, float y, float time) {
-  DLOG
-    worldSpace temp = Position;
+  DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
   P2D delta(x - Position.X, y - Position.Y);
@@ -63,12 +58,12 @@ void pathFind::GoTo(float x, float y, float time) {
   motors::Brake();
   Wait(0.1);
 
-  motors::Distance(delta.Magnitude(), delta.Magnitude(), time * delta.Magnitude());
+  motors::Distance(delta.Magnitude(), delta.Magnitude(),
+                   time * delta.Magnitude());
   Position += temp;
 }
 void pathFind::GoTo(P2D goal, float time) {
-  DLOG
-    worldSpace temp = Position;
+  DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
   P2D delta(goal - Position);
@@ -77,6 +72,7 @@ void pathFind::GoTo(P2D goal, float time) {
   motors::Brake();
   Wait(0.1);
 
-  motors::Distance(delta.Magnitude(), delta.Magnitude(), time * delta.Magnitude());
+  motors::Distance(delta.Magnitude(), delta.Magnitude(),
+                   time * delta.Magnitude());
   Position += temp;
 }

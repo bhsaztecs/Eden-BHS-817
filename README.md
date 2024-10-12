@@ -1,1 +1,2 @@
-Eden is an abstraction library that interfaces with KIPR's wombat. Check Formalities for licenses and other information.
+Eden is an abstraction library that interfaces with KIPR's wombat.
+Eden is licensed under GNU AGPL.

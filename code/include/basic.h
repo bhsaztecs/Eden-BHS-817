@@ -472,8 +472,8 @@ string PrettyTime(int ms) {
 
 worldSpace Position(0, 0, 0, 0);
 
-#include "Misc.h"
-#include "Motor.h"
-#include "Pathfind.h"
-#include "Sensor.h"
-#include "Servo.h"
+#include "misc.h"
+#include "motor.h"
+#include "pathfind.h"
+#include "sensor.h"
+#include "servo.h"

@@ -1,15 +1,9 @@
 #pragma once
-#include "Basic.h"
-bool dgtl::Value(int port) {
-  return digital(port);
-}
+#include "basic.h"
+bool dgtl::Value(int port) { return digital(port); }
 
-float nlg::Value(int port) {
-  return (float) analog(port) / 4095;
-}
-int nlg::Raw(int port) {
-  return analog(port);
-}
+float nlg::Value(int port) { return (float)analog(port) / 4095; }
+int nlg::Raw(int port) { return analog(port); }
 
 void accel::Calibrate() {
   accel_calibrate();
@@ -33,9 +27,7 @@ void accel::Update() {
   Value.Z = accel_z();
 }
 
-void gyro::Calibrate() {
-  gyro_calibrate();
-}
+void gyro::Calibrate() { gyro_calibrate(); }
 float gyro::Magnitude() {
   Update();
   return Value.Magnitude();
@@ -55,7 +47,7 @@ void gyro::Update() {
 }
 
 void mag::Calibrate() {
-  //magneto_calibrate();
+  // magneto_calibrate();
 }
 float mag::Magnitude() {
   Update();
@@ -75,9 +67,5 @@ void mag::Update() {
   Value.Z = magneto_z();
 }
 
-int bttry::Power() {
-  return power_level() * 100;
-}
-bool bttry::Critical() {
-  return Power() < 33;
-}
+int bttry::Power() { return power_level() * 100; }
+bool bttry::Critical() { return Power() < 33; }
