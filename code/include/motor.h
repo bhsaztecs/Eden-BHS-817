@@ -1,58 +1,75 @@
 #pragma once
 #include "basic.h"
 namespace motors {
-void ClearMotorRotations() {
-  DLOG KIPR::cmpc(LeftMotor);
-  KIPR::cmpc(RightMotor);
+using namespace BKND;
+using namespace BKND::motors;
+using namespace KIPR;
+void ClearMotorRotations(int p_leftmotor, int p_rightmotor) {
+  DLOG cmpc(p_leftmotor);
+  cmpc(p_rightmotor);
 }
-void Velocity() {
+void Velocity(int p_leftmotor, int p_rightmotor, float &p_leftspeed,
+              float &p_rightspeed) {
   DLOG while (1) {
-    float VLo = KIPR::gmpc(LeftMotor);
-    float VRo = KIPR::gmpc(RightMotor);
-    KIPR::msleep(100);
-    float VLt = KIPR::gmpc(LeftMotor);
-    float VRt = KIPR::gmpc(RightMotor);
+    float VLo = gmpc(p_leftmotor);
+    float VRo = gmpc(p_rightmotor);
+    msleep(100);
+    float VLt = gmpc(p_leftmotor);
+    float VRt = gmpc(p_rightmotor);
 
     float Lv = (VLt - VLo) * 10;
     float Rv = (VRt - VRo) * 10;
-    LeftSpeed = Lv * 0.06;
-    RightSpeed = Rv * 0.06;
+    p_leftspeed = Lv * 0.06;
+    p_rightspeed = Rv * 0.06;
   }
 }
-void Speed(float LeftPercent, float RightPercent, float TimeInSeconds) {
-  DLOG float Lo = TTIW(KIPR::gmpc(LeftMotor));
-  float Ro = TTIW(KIPR::gmpc(RightMotor));
-  KIPR::motor(LeftMotor, (LeftPercent * LMM));
-  KIPR::motor(RightMotor, (RightPercent * RMM));
-  KIPR::msleep((TimeInSeconds * 1000) * TimeMultiplier);
-  float Lt = TTIW(KIPR::gmpc(LeftMotor));
-  float Rt = TTIW(KIPR::gmpc(RightMotor));
+void Speed(float p_leftpercent, float p_rightpercent, float p_timeinseconds,
+           int p_leftmotor, int p_rightmotor, float p_lmm, float p_rmm,
+           float p_timemultiplier) {
+  DLOG float Lo = TTIW(gmpc(p_leftmotor));
+  float Ro = TTIW(gmpc(p_rightmotor));
+  motor(p_leftmotor, (p_leftpercent * p_lmm));
+  motor(p_rightmotor, (p_rightpercent * p_rmm));
+  msleep((p_timeinseconds * 1000) * p_timemultiplier);
+  float Lt = TTIW(gmpc(p_leftmotor));
+  float Rt = TTIW(gmpc(p_rightmotor));
   float DelL = Lt - Lo;
   float DelR = Rt - Ro;
   pathFind::AthenaDecision(DelL, DelR);
 }
-void Rotation(float LeftDegrees, float RightDegrees, float TimeInSeconds) {
-  DLOG float DistL = DTIW(LeftDegrees);
-  float DistR = DTIW(RightDegrees);
-  Distance(DistL, DistR, TimeInSeconds);
+void Rotation(float p_leftdegrees, float p_rightdegrees, float p_timeinseconds,
+              int p_leftmotor, int p_rightmotor, float p_lmm, float p_rmm,
+              float p_timemultiplier) {
+  DLOG float DistL = DTIW(p_leftdegrees);
+  float DistR = DTIW(p_rightdegrees);
+  Distance(DistL, DistR, p_timeinseconds, p_leftmotor, p_rightmotor, p_lmm,
+           p_rmm, p_timemultiplier);
 }
-void Distance(float LeftInches, float RightInches, float TimeInSeconds) {
-  DLOG float Ls = float((ITTW(LeftInches / TimeInSeconds)) / 15.0);
-  float Rs = float((ITTW(RightInches / TimeInSeconds)) / 15.0);
-  Speed(Ls, Rs, TimeInSeconds);
+void Distance(float p_leftinches, float p_rightinches, float p_timeinseconds,
+              int p_leftmotor, int p_rightmotor, float p_lmm, float p_rmm,
+              float p_timemultiplier) {
+  DLOG float Ls = float((ITTW(p_leftinches / p_timeinseconds)) / 15.0);
+  float Rs = float((ITTW(p_rightinches / p_timeinseconds)) / 15.0);
+  Speed(Ls, Rs, p_timeinseconds, p_leftmotor, p_rightmotor, p_lmm, p_rmm,
+        p_timemultiplier);
 }
-void Accelerate(float LeftMaxPercent, float RightMaxPercent,
-                float TimeInSeconds) {
-  DLOG float SpeedL = LeftSpeed;
-  float DeltaLp = LeftMaxPercent - SpeedL;
+void Accelerate(float p_leftmaxpercent, float p_rightmaxpercent,
+                float p_timeinseconds, int p_leftmotor, int p_rightmotor,
+                float &p_leftspeed, float &p_rightspeed, float p_lmm,
+                float p_rmm, float p_timemultiplier) {
+  DLOG float SpeedL = p_leftspeed;
+  float DeltaLp = p_leftmaxpercent - SpeedL;
 
-  float SpeedR = RightSpeed;
-  float DeltaRp = RightMaxPercent - SpeedR;
+  float SpeedR = p_rightspeed;
+  float DeltaRp = p_rightmaxpercent - SpeedR;
 
   for (float i = 0; i < 1; i += 0.01) {
     Speed(Interpolate(i, DeltaLp) + SpeedL, Interpolate(i, DeltaRp) + SpeedR,
-          TimeInSeconds / 100);
+          p_timeinseconds / 100, p_leftmotor, p_rightmotor, p_lmm, p_rmm,
+          p_timemultiplier);
   }
 }
-void Brake() { DLOG Speed(0, 0, 0.1); }
+void Brake(int p_leftmotor, int p_rightmotor) {
+  DLOG Speed(0, 0, 0.1, p_leftmotor, p_rightmotor, 1, 1, 1);
+}
 } // namespace motors
