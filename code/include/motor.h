@@ -29,7 +29,7 @@ void Speed(float LeftPercent, float RightPercent, float TimeInSeconds) {
   float Rt = TTIW(KIPR::gmpc(RightMotor));
   float DelL = Lt - Lo;
   float DelR = Rt - Ro;
-  AthenaDecision(DelL, DelR);
+  pathFind::AthenaDecision(DelL, DelR);
 }
 void Rotation(float LeftDegrees, float RightDegrees, float TimeInSeconds) {
   DLOG float DistL = DTIW(LeftDegrees);

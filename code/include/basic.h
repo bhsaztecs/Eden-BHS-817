@@ -26,46 +26,8 @@ class P2D;        // 2 dimensional coordinate
 class P3D;        // 3 dimensional coordinate
 class worldSpace; // 2 dimensional coordinate with additional functionality
 std::vector<worldSpace *> Obstacles;
-namespace motors {
-short int LeftMotor;  // left motor port
-short int RightMotor; // right motor port
-float LMM;            // if a motor is drifting, adjust this number accordingly
-float RMM; // if its drifting to the left, lower the right motor multiplier
-// (between 1 and 0)
-float TimeMultiplier =
-    1; // multiplies time in order to adjust for distance loss (greater than 1)
-float LeftSpeed = 0;
-float RightSpeed = 0;
-} // namespace motors
-namespace buttons {} // namespace buttons
-namespace misc {}    // namespace misc
-namespace dgtl {}    // namespace dgtl
-namespace nlg {}     // namespace nlg
-namespace accel {}   // namespace accel
-namespace gyro {}    // namespace gyro
-namespace mag {}     // namespace mag
-namespace bttry {}   // namespace bttry
-namespace sensors {
-short int StartLight; // start on light sensor port
-} // namespace sensors
-namespace servos {
-short int ArmServo;
-short int ClawServo;
-} // namespace servos
-namespace up {}      // namespace up
-namespace down {}    // namespace down
-namespace pressed {} // namespace pressed
 
 long int CurrentMS = 0;
-
-float WheelRadius = 1.5;
-float AxleRadius = 3.5;
-const float TurnRate =
-    3.9; // i have no fucking idea how to calculate this man just
-// guess until you're right... supposed to be (axle length / wheel length ) +1
-// but that gives like 3.6 or something and that doesn't work so whatever...
-// maybe my unit conversions are wrong somewhere idk man
-const int AthenaMargin = 5;
 
 float Deg(float);  /*Convert Radians to Degrees*/
 float Rad(float);  /*Convert Degrees to Radians*/
@@ -81,35 +43,21 @@ float TTDW(int);   /*convert ticks to degrees (for the wheel)*/
 float TTIW(int);   /*convert ticks to inches (for the wheel)*/
 float Interpolate(float,
                   float); /*get a smooth transition from point a to point b*/
-/*IN {-> Time (from 1 to 0), Delta (from 0 to this number)
+/* IN {-> Time (from 1 to 0), Delta (from 0 to this number)
  * OUT{-> value returned from the equation.
- * USE{-> put it in a for loop, i.e.
- * for(float i = 0; i < 1; i+=0.01){
- *		motors::Speed(Interpolate(i,1),Interpolate(i,1),0.1);
- * }
- * this leads to a very smooth increase in speed (3rd derivative continuous
  */
 template <typename A, typename B, typename C>
 bool MarginOfError(A, B, C); /*is a close to b?*/
-/*IN {-> Check, Goal, Range
+/* IN {-> Check, Goal, Range
  * OUT{-> true/false
- * is A within BB1C?
  */
 template <typename A, typename B, typename C>
 bool Clamp(A, B, C); /*Is B within A and C?*/
-/*IN {-> Min, Value, Max
+/* IN {-> Min, Value, Max
  * OUT {-> Min<=Value<=Max
  */
 void Wait(float);       /*Wait for x seconds*/
 string PrettyTime(int); /*display milliseconds as min:sec.ms*/
-void AthenaDecision(float,
-                    float); /*Decide which algorithm to use, then uses it.*/
-/* IN {-> Change in Left wheel position, Change in Right wheel position
- */
-void AngularPathfind(float, float); /*Updates orientation based on inputs*/
-void LinearPathfind(float, float);  /*Updates position based on inputs*/
-void DynamicPathfind(float, float); /*Updates position and orientation based on
-                                       inputs. MAY DIVIDE BY 0*/
 
 class P2D {
 public:
@@ -144,7 +92,7 @@ public:
     this->X = temp.X;
     this->Y = temp.Y;
   }
-}; // namespace P2D
+};
 class P3D {
 public:
   float X;
@@ -186,7 +134,7 @@ public:
     this->Y = temp.Y;
     this->Z = temp.Z;
   }
-}; // namespace P3D
+};
 class worldSpace : public P2D {
 public:
   float O = 0;
@@ -225,33 +173,22 @@ public:
   worldSpace operator=(const worldSpace &other) { return other; }
 }; // namespace worldSpace:public P2D
 
-class newThread {
-public:
-  KIPR::thread Thread;
-  newThread(
-      void (*func)()) { // create a new thread with a function as a parameter
-    Thread = KIPR::thread_create(func);
-  }
-  void Run();  // start the thread
-  void Kill(); // end the thread
-}; // namespace newThread
-
 namespace misc {
 void DefStatus(int); /*
  print a huge block of sensor values (if enabled)
- in: 3 char hex array (fff,000,fa6,etc)
- 00:OXY of the bot (print worldspace)
- 01:Battery level of the bot
- 02:every motor position in ticks
- 03:accelerometer values and average
- 04:gyroscope values and average
- 05:compass angle
- 06:motor multiplier values
- 07:servo positions in tics
- 08:servos enabled?
- 09:digital values
- 10:analog values
- 11:sets debugging on or off
+ in: 12bits, i.e. 0xfff, 0b1111_1111_1111
+ 00: OXY of the bot (print worldspace)
+ 01: Battery level of the bot
+ 02: every motor position in ticks
+ 03: accelerometer values and average
+ 04: gyroscope values and average
+ 05: compass angle
+ 06: motor multiplier values
+ 07: servo positions in tics
+ 08: servos enabled?
+ 09: digital values
+ 10: analog values
+ 11: sets debugging on or off
  */
 void Timer();    // start a clock that updates a global variable. does not end
 void HandsOff(); // starts handsoff/shutdownin
@@ -290,6 +227,22 @@ bool Z();
 }; // namespace misc
 
 namespace pathFind {
+void AthenaDecision(float,
+                    float); /*Decide which algorithm to use, then uses it.*/
+/* IN {-> Change in Left wheel position, Change in Right wheel position
+ */
+void AngularPathfind(float, float); /*Updates orientation based on inputs*/
+void LinearPathfind(float, float);  /*Updates position based on inputs*/
+void DynamicPathfind(float, float); /*Updates position and orientation based on
+                                       inputs. MAY DIVIDE BY 0*/
+float WheelRadius = 1.5;
+float AxleRadius = 3.5;
+const float TurnRate =
+    3.9; // i have no fucking idea how to calculate this man just
+// guess until you're right... supposed to be (axle length / wheel length ) +1
+// but that gives like 3.6 or something and that doesn't work so whatever...
+// maybe my unit conversions are wrong somewhere idk man
+const int AthenaMargin = 5;
 void Face(float, float); // face a certain degree heading in given time
 void GoTo(float, float,
           float);      // go to an (x,y) coordinate in a given time
@@ -297,6 +250,8 @@ void GoTo(P2D, float); // overload
 }; // namespace pathFind
 
 namespace sensors {
+short int StartLight; // start on light sensor port
+
 namespace dgtl {
 bool Value(int); // get the value of a port
 }; // namespace dgtl
@@ -337,12 +292,23 @@ bool Critical(); // is the battery less than 33% full?
 }; // namespace sensors
 
 namespace servos {
+short int ArmServo;
+short int ClawServo;
 void Set(float, float);    // go to a degree angle in a certain time
 void Move(float, float);   // change the degree angle in a certain time
 void Change(float, float); // go to a degree angle smoothly in a certain time
 }; // namespace servos
 
 namespace motors {
+short int LeftMotor;  // left motor port
+short int RightMotor; // right motor port
+float LMM;            // if a motor is drifting, adjust this number accordingly
+float RMM; // if its drifting to the left, lower the right motor multiplier
+// (between 1 and 0)
+float TimeMultiplier =
+    1; // multiplies time in order to adjust for distance loss (greater than 1)
+float LeftSpeed = 0;
+float RightSpeed = 0;
 void ClearMotorRotations(); // sets the counter to 0
 void Velocity(); // updates the global velocity variables, keep it in a
                  // thread. it has no end.
@@ -362,6 +328,17 @@ void init(int leftport = 0, int rightport = 0, float leftmult = 1,
   ClearMotorRotations();
 }
 }; // namespace motors
+
+class newThread {
+public:
+  KIPR::thread Thread;
+  newThread(
+      void (*func)()) { // create a new thread with a function as a parameter
+    Thread = KIPR::thread_create(func);
+  }
+  void Run();  // start the thread
+  void Kill(); // end the thread
+}; // namespace newThread
 
 float Interpolate(float timePercent, float delta) {
   DLOG return (
@@ -387,9 +364,9 @@ int DTTW(float degrees) { DLOG return degrees * 5.55; }
 
 float TTDW(int ticks) { DLOG return ticks / 5.55; }
 
-float DTIW(float degrees) { DLOG return WheelRadius * Rad(degrees); }
+float DTIW(float degrees) { DLOG return pathFind::WheelRadius * Rad(degrees); }
 
-float ITDW(float inches) { DLOG return Deg(WheelRadius / inches); }
+float ITDW(float inches) { DLOG return Deg(pathFind::WheelRadius / inches); }
 
 float TTIW(int ticks) { DLOG return ticks / 206.49999936; }
 
