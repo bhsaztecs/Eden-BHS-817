@@ -9,8 +9,6 @@ namespace KIPR {
 #include <vector>
 using std::string;
 using std::vector;
-
-auto program_start_time = std::chrono::high_resolution_clock::now();
 #define DLOG                                                                   \
   if (Debugging) {                                                             \
     auto now = std::chrono::high_resolution_clock::now();                      \
@@ -20,6 +18,9 @@ auto program_start_time = std::chrono::high_resolution_clock::now();
               << ") Time since start: " << PrettyTime(elapsedtime.count())     \
               << std::endl;                                                    \
   }
+bool Debugging;
+
+auto program_start_time = std::chrono::high_resolution_clock::now();
 class newThread;  // thread functionality
 class P2D;        // 2 dimensional coordinate
 class P3D;        // 3 dimensional coordinate
@@ -55,7 +56,6 @@ namespace up {}      // namespace up
 namespace down {}    // namespace down
 namespace pressed {} // namespace pressed
 
-bool Debugging;
 long int CurrentMS = 0;
 
 float WheelRadius = 1.5;
