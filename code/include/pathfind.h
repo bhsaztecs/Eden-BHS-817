@@ -22,15 +22,15 @@ void AngularPathfind(float p_deltal, float p_deltar, float p_turnrate) {
   DLOG float Wa = (fabs(p_deltal) + fabs(p_deltar)) / 2;
   float Ooffset = Wa / p_turnrate;
 
-  Position.O += Ooffset;
+  Position.m_O += Ooffset;
 }
 
 void LinearPathfind(float p_deltal, float p_deltar) {
   DLOG float Distance = DTIW((p_deltal + p_deltar) / 2);
-  P2D delta(Distance * cos(Position.O), Distance * sin(Position.O));
+  P2D delta(Distance * cos(Position.m_O), Distance * sin(Position.m_O));
 
-  Position.X += delta.X;
-  Position.Y += delta.Y;
+  Position.m_X += delta.m_X;
+  Position.m_Y += delta.m_Y;
 }
 
 void DynamicPathfind(float p_deltal, float p_deltar) {
@@ -40,14 +40,14 @@ void DynamicPathfind(float p_deltal, float p_deltar) {
   P2D prime(fabs(c) * cos(theta), fabs(c) * sin(theta));
 
   Position += prime;
-  Position.O += theta;
+  Position.m_O += theta;
 }
 void Face(float p_deg, float p_time, float p_turnrate, int p_leftmotor,
           int p_rightmotor, float p_lmm, float p_rmm, float p_timemultiplier) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
-  float DeltaO = Rad(p_deg) - Position.O;
+  float DeltaO = Rad(p_deg) - Position.m_O;
   float WheelAngle = Deg(DeltaO * (p_turnrate / 2));
   motors::Rotation(WheelAngle, -WheelAngle, p_time, p_leftmotor, p_rightmotor,
                    p_lmm, p_rmm, p_timemultiplier);

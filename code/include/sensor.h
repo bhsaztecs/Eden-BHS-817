@@ -30,9 +30,9 @@ float Yaw() {
   return Value.Yaw();
 }
 void Update() {
-  Value.X = accel_x();
-  Value.Y = accel_y();
-  Value.Z = accel_z();
+  Value.m_X = accel_x();
+  Value.m_Y = accel_y();
+  Value.m_Z = accel_z();
 }
 } // namespace accel
 namespace gyro {
@@ -51,9 +51,9 @@ float Yaw() {
   return Value.Yaw();
 }
 void Update() {
-  Value.X = gyro_x();
-  Value.Y = gyro_y();
-  Value.Z = gyro_z();
+  Value.m_X = gyro_x();
+  Value.m_Y = gyro_y();
+  Value.m_Z = gyro_z();
 }
 } // namespace gyro
 namespace mag {
@@ -75,9 +75,9 @@ float Yaw() {
   return Value.Yaw();
 }
 void Update() {
-  Value.X = magneto_x();
-  Value.Y = magneto_y();
-  Value.Z = magneto_z();
+  Value.m_X = magneto_x();
+  Value.m_Y = magneto_y();
+  Value.m_Z = magneto_z();
 }
 } // namespace mag
 namespace bttry {

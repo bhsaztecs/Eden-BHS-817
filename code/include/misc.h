@@ -91,8 +91,8 @@ void Timer() {
   }
 }
 } // namespace misc
-void BKND::Thread::Run() { thread_start(this->thethread); }
+void BKND::Thread::Run() { thread_start(this->m_Thethread); }
 void BKND::Thread::Kill() {
-  thread_wait(this->thethread);
-  thread_destroy(this->thethread);
+  thread_wait(this->m_Thethread);
+  thread_destroy(this->m_Thethread);
 }

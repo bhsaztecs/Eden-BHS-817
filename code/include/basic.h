@@ -63,115 +63,120 @@ string PrettyTime(int); /*display milliseconds as min:sec.ms*/
 
 class P2D {
 public:
-  float X;
-  float Y;
+  float m_X;
+  float m_Y;
   P2D(float x = 0, float y = 0) {
-    this->X = x;
-    this->Y = y;
+    this->m_X = x;
+    this->m_Y = y;
   }
-  float Magnitude() { return std::sqrt(std::pow(X, 2) + std::pow(Y, 2)); }
-  float Angle() { return Deg(std::atan2(Y, X)); }
+  float Magnitude() { return std::sqrt(std::pow(m_X, 2) + std::pow(m_Y, 2)); }
+  float Angle() { return Deg(std::atan2(m_Y, m_X)); }
   P2D operator-(const P2D &p_other) {
-    return P2D(this->X - p_other.X, this->Y - p_other.Y);
+    return P2D(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y);
   }
   P2D operator+(const P2D &p_other) {
-    return P2D(this->X + p_other.X, this->Y + p_other.Y);
+    return P2D(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y);
   }
   void operator=(const P2D &p_other) {
-    this->X = p_other.X;
-    this->Y = p_other.Y;
+    this->m_X = p_other.m_X;
+    this->m_Y = p_other.m_Y;
   }
   bool operator==(const P2D &p_other) {
-    return (this->X == p_other.X) && (this->Y == p_other.Y);
+    return (this->m_X == p_other.m_X) && (this->m_Y == p_other.m_Y);
   }
   void operator+=(const P2D &p_other) {
-    P2D temp(this->X + p_other.X, this->Y + p_other.Y);
-    this->X = temp.X;
-    this->Y = temp.Y;
+    P2D temp(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y);
+    this->m_X = temp.m_X;
+    this->m_Y = temp.m_Y;
   }
   void operator-=(const P2D &p_other) {
-    P2D temp(this->X - p_other.X, this->Y - p_other.Y);
-    this->X = temp.X;
-    this->Y = temp.Y;
+    P2D temp(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y);
+    this->m_X = temp.m_X;
+    this->m_Y = temp.m_Y;
   }
 };
 class P3D {
+
 public:
-  float X;
-  float Y;
-  float Z;
+  float m_X;
+  float m_Y;
+  float m_Z;
   P3D(float p_x = 0, float p_y = 0, float p_z = 0) {
-    this->X = p_x;
-    this->Y = p_y;
-    this->Z = p_z;
+    this->m_X = p_x;
+    this->m_Y = p_y;
+    this->m_Z = p_z;
   }
   float Magnitude() {
-    return std::sqrt(std::pow(X, 2) + std::pow(Y, 2) + std::pow(Z, 2));
+    return std::sqrt(std::pow(m_X, 2) + std::pow(m_Y, 2) + std::pow(m_Z, 2));
   }
-  float Pitch() { return Deg(std::atan(Y / Z)); }
-  float Yaw() { return Deg(std::atan(X / Z)); }
+  float Pitch() { return Deg(std::atan(m_Y / m_Z)); }
+  float Yaw() { return Deg(std::atan(m_X / m_Z)); }
   P3D operator-(const P3D &p_other) {
-    return P3D(this->X - p_other.X, this->Y - p_other.Y, this->Z - p_other.Z);
+    return P3D(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y,
+               this->m_Z - p_other.m_Z);
   }
   P3D operator+(const P3D &p_other) {
-    return P3D(this->X + p_other.X, this->Y + p_other.Y, this->Z + p_other.Z);
+    return P3D(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y,
+               this->m_Z + p_other.m_Z);
   }
   void operator=(const P3D &p_other) {
-    this->X = p_other.X;
-    this->Y = p_other.Y;
-    this->Z = p_other.Z;
+    this->m_X = p_other.m_X;
+    this->m_Y = p_other.m_Y;
+    this->m_Z = p_other.m_Z;
   }
   bool operator==(const P3D &p_other) {
-    return (this->X == p_other.X) && (this->Y == p_other.Y) &&
-           (this->Z == p_other.Z);
+    return (this->m_X == p_other.m_X) && (this->m_Y == p_other.m_Y) &&
+           (this->m_Z == p_other.m_Z);
   }
   void operator+=(const P3D &p_other) {
-    P3D temp(this->X + p_other.X, this->Y + p_other.Y, this->Z + p_other.Z);
-    this->X = temp.X;
-    this->Y = temp.Y;
-    this->Z = temp.Z;
+    P3D temp(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y,
+             this->m_Z + p_other.m_Z);
+    this->m_X = temp.m_X;
+    this->m_Y = temp.m_Y;
+    this->m_Z = temp.m_Z;
   }
   void operator-=(const P3D &p_other) {
-    P3D temp(this->X - p_other.X, this->Y - p_other.Y, this->Z - p_other.Z);
-    this->X = temp.X;
-    this->Y = temp.Y;
-    this->Z = temp.Z;
+    P3D temp(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y,
+             this->m_Z - p_other.m_Z);
+    this->m_X = temp.m_X;
+    this->m_Y = temp.m_Y;
+    this->m_Z = temp.m_Z;
   }
 };
 class worldSpace : public P2D {
 public:
-  float O = 0;
-  float Radius = 0;
+  float m_O = 0;
+  float m_Radius = 0;
 
   worldSpace(float p_x = 0, float p_y = 0, float p_r = 5, float p_o = 0) {
-    this->O = p_o;
-    this->X = p_x;
-    this->Y = p_y;
-    this->Radius = p_r;
+    this->m_O = p_o;
+    this->m_X = p_x;
+    this->m_Y = p_y;
+    this->m_Radius = p_r;
     Obstacles.push_back(this);
   }
 
   bool operator==(const worldSpace &p_other) {
-    return (this->X == p_other.X) && (this->Y == p_other.Y);
+    return (this->m_X == p_other.m_X) && (this->m_Y == p_other.m_Y);
   }
   bool operator!=(const worldSpace &p_other) {
-    return (this->X != p_other.X) || (this->Y != p_other.Y);
+    return (this->m_X != p_other.m_X) || (this->m_Y != p_other.m_Y);
   }
   worldSpace operator-(const P2D &p_other) {
-    return worldSpace(this->X - p_other.X, this->Y - p_other.Y);
+    return worldSpace(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y);
   }
   worldSpace operator+(const P2D &p_other) {
-    return worldSpace(this->X + p_other.X, this->Y + p_other.Y);
+    return worldSpace(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y);
   }
   void operator+=(const P2D &p_other) {
-    P2D temp(this->X + p_other.X, this->Y + p_other.Y);
-    this->X = temp.X;
-    this->Y = temp.Y;
+    P2D temp(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y);
+    this->m_X = temp.m_X;
+    this->m_Y = temp.m_Y;
   }
   void operator-=(const P2D &p_other) {
-    P2D temp(this->X - p_other.X, this->Y - p_other.Y);
-    this->X = temp.X;
-    this->Y = temp.Y;
+    P2D temp(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y);
+    this->m_X = temp.m_X;
+    this->m_Y = temp.m_Y;
   }
   worldSpace operator=(const worldSpace &p_other) { return p_other; }
 }; // namespace worldSpace:public P2D
@@ -311,10 +316,10 @@ void Brake(int, int);   // turn on the brakes
 
 class Thread {
 public:
-  thread thethread;
+  thread m_Thethread;
   Thread(
       void (*p_func)()) { // create a new thread with a function as a parameter
-    thethread = thread_create(p_func);
+    m_Thethread = thread_create(p_func);
   }
   void Run();  // start the thread
   void Kill(); // end the thread

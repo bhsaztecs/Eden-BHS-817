@@ -24,7 +24,7 @@ void update() {
 
 int main() {
   if (true /*tournament mode*/) {
-    BKND::misc::waitforlight(startlight.Port);
+    BKND::misc::waitforlight(startlight.m_Port);
     KIPR::shut_down_in(119);
   }
   BKND::Thread UPDATE(update);

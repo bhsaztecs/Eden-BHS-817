@@ -63,58 +63,58 @@ class Servos {
   }
 
 public:
-  int port;
-  BKND::P2D Minimum, Maximum;
+  int m_Port;
+  BKND::P2D m_Minimum, m_Maximum;
 
   Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max) {}
-  void Set(float p_angle) { BKND::servos::Set(port, p_angle); }
-  void Change(float p_angle) { BKND::servos::Change(port, p_angle); }
+  void Set(float p_angle) { BKND::servos::Set(m_Port, p_angle); }
+  void Change(float p_angle) { BKND::servos::Change(m_Port, p_angle); }
   void GoTo(float p_angle, float p_time) {
-    BKND::servos::Move(port, p_angle, p_time);
+    BKND::servos::Move(m_Port, p_angle, p_time);
   }
-  float Angle() { return BKND::TTDA(KIPR::get_servo_position(port)); }
+  float Angle() { return BKND::TTDA(KIPR::get_servo_position(m_Port)); }
 };
 
 template <BKND::sensors::type> class Sensors {
 public:
-  int Port;
+  int m_Port;
 
-  Sensors(int p_port) : Port(p_port) {}
+  Sensors(int p_port) : m_Port(p_port) {}
 };
 
 template <> class Sensors<BKND::sensors::type::Analog> {
 public:
-  int Port;
+  int m_Port;
 
-  Sensors(int p_port) : Port(p_port) {}
-  float Value() { return BKND::sensors::nlg::Value(Port); }
+  Sensors(int p_port) : m_Port(p_port) {}
+  float Value() { return BKND::sensors::nlg::Value(m_Port); }
 };
 template <> class Sensors<BKND::sensors::type::Digital> {
 public:
-  int Port;
+  int m_Port;
 
-  Sensors(int p_port) : Port(p_port) {}
-  bool Value() { return BKND::sensors::dgtl::Value(Port); }
+  Sensors(int p_port) : m_Port(p_port) {}
+  bool Value() { return BKND::sensors::dgtl::Value(m_Port); }
 };
 
 class PathFind {
 public:
-  float Margin;
-  Motors Read;
-  float TurnRate;
+  float m_Margin;
+  Motors m_Read;
+  float m_TurnRate;
   PathFind(float p_margin, float p_turnrate, Motors p_readfrom)
-      : Read(p_readfrom) {
-    Margin = p_margin;
-    TurnRate = p_turnrate;
+      : m_Read(p_readfrom) {
+    m_Margin = p_margin;
+    m_TurnRate = p_turnrate;
   }
   void GoTo(BKND::P2D p_goal, float p_time) {
-    BKND::pathFind::GoTo(p_goal, p_time, TurnRate, Read.m_LeftPort,
-                         Read.m_RightPort, Read.m_LeftCompensator,
-                         Read.m_RightCompensator, Read.m_TimeCompensator);
+    BKND::pathFind::GoTo(p_goal, p_time, m_TurnRate, m_Read.m_LeftPort,
+                         m_Read.m_RightPort, m_Read.m_LeftCompensator,
+                         m_Read.m_RightCompensator, m_Read.m_TimeCompensator);
   }
   void Face(float p_goal, float p_time) {
-    BKND::pathFind::Face(p_goal, p_time, TurnRate, Read.m_LeftPort,
-                         Read.m_RightPort, Read.m_LeftCompensator,
-                         Read.m_RightCompensator, Read.m_TimeCompensator);
+    BKND::pathFind::Face(p_goal, p_time, m_TurnRate, m_Read.m_LeftPort,
+                         m_Read.m_RightPort, m_Read.m_LeftCompensator,
+                         m_Read.m_RightCompensator, m_Read.m_TimeCompensator);
   }
 };
