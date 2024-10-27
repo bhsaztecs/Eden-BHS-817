@@ -53,8 +53,16 @@ public:
   void Brake() { BKND::motors::Brake(LeftPort, RightPort); }
 };
 class Servos {
+  int port;
+  BKND::P2D Minimum, Maximum;
+  float lerp(float a, float b, float t) { return a + (b - a) * t; }
+
 public:
   Servos(int port, BKND::P2D min, BKND::P2D max) {}
+  void Set(float Angle) { BKND::servos::Set(port, Angle); }
+  void Change(float Angle) { BKND::servos::Change(port, Angle); }
+  void GoTo(float Angle, float Time) { BKND::servos::Move(port, Angle, Time); }
+  float Angle() { return BKND::TTDA(KIPR::get_servo_position(port)); }
 };
 class Sensors {
 public:
