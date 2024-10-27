@@ -1,32 +1,29 @@
 #pragma once
 #include "basic.h"
 namespace servos {
-void Set(float armAngle,
-         float clawAngle = TTDC(KIPR::get_servo_position(ClawServo))) {
-  DLOG KIPR::set_servo_position(ArmServo, DTTA(armAngle));
-  KIPR::set_servo_position(ClawServo, DTTC(clawAngle));
-}
-void Change(float changeInArmAngle, float changeInClawAngle = 0) {
-  DLOG int curA = TTDA(KIPR::get_servo_position(ArmServo));
-  int curC = TTDC(KIPR::get_servo_position(ClawServo));
-  int posA = curA + changeInArmAngle;
-  int posC = curC + changeInClawAngle;
+using namespace BKND;
+using namespace BKND::servos;
+using namespace KIPR;
+void Set(int port, float Angle) { DLOG set_servo_position(port, DTTA(Angle)); }
+void Change(int port, float changeInAngle) {
+  DLOG int curA = TTDA(get_servo_position(port));
+  int posA = curA + changeInAngle;
 
-  Set(posA, posC);
+  Set(port, posA);
 }
-void Move(float armAngle, float timeInSeconds) {
-  DLOG int curAng = KIPR::get_servo_position(ArmServo);
-  armAngle = DTTA(armAngle);
-  int it = armAngle - curAng;
+void Move(int port, float Angle, float timeInSeconds) {
+  DLOG int curAng = get_servo_position(port);
+  Angle = DTTA(Angle);
+  int it = Angle - curAng;
   if (it > 0) {
-    for (int a = curAng; a < armAngle; a += 10) {
-      Set(TTDA(a));
-      Wait(abs(timeInSeconds / it) * 10);
+    for (int a = curAng; a < Angle; a += 10) {
+      Set(port, TTDA(a));
+      msleep(abs(timeInSeconds / it) * 10 * 1000);
     }
   } else {
-    for (int a = curAng; a > armAngle; a -= 10) {
-      Set(TTDA(a));
-      Wait(abs(timeInSeconds / it) * 10);
+    for (int a = curAng; a > Angle; a -= 10) {
+      Set(port, TTDA(a));
+      msleep(abs(timeInSeconds / it) * 10 * 1000);
     }
   }
 }

@@ -1,6 +1,6 @@
 class thread {};
 
-thread thread_create(void()) {
+thread thread_create(void (*func)()) {
   thread temp;
   return temp;
 }

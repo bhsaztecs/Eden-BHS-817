@@ -2,7 +2,10 @@
 #include "basic.h"
 
 namespace pathFind {
-void AthenaDecision(float deltaL, float deltaR) {
+using namespace BKND;
+using namespace BKND::pathFind;
+using namespace KIPR;
+void AthenaDecision(float deltaL, float deltaR, float AthenaMargin) {
   DLOG if (MarginOfError(abs(deltaL), abs(deltaR), AthenaMargin) &&
            (deltaL != deltaR)) {
     AngularPathfind(deltaL, deltaR);
@@ -15,7 +18,7 @@ void AthenaDecision(float deltaL, float deltaR) {
   DynamicPathfind(deltaL, deltaR);
   return;
 }
-void AngularPathfind(float deltaL, float deltaR) {
+void AngularPathfind(float deltaL, float deltaR, float TurnRate) {
   DLOG float Wa = (abs(deltaL) + abs(deltaR)) / 2;
   float Ooffset = Wa / TurnRate;
 
@@ -39,41 +42,49 @@ void DynamicPathfind(float deltaL, float deltaR) {
   Position += prime;
   Position.O += theta;
 }
-void Face(float deg, float time) {
+void Face(float deg, float time, float TurnRate, int LeftMotor, int RightMotor,
+          float LMM, float RMM, float TimeMultiplier) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
   float DeltaO = Rad(deg) - Position.O;
   float WheelAngle = Deg(DeltaO * (TurnRate / 2));
-  motors::Rotation(WheelAngle, -WheelAngle, time);
+  motors::Rotation(WheelAngle, -WheelAngle, time, LeftMotor, RightMotor, LMM,
+                   RMM, TimeMultiplier);
   Position += temp;
 }
-void GoTo(float x, float y, float time) {
+void GoTo(float x, float y, float time, float TurnRate, int LeftMotor,
+          int RightMotor, float LMM, float RMM, float TimeMultiplier) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
   P2D delta(x - Position.X, y - Position.Y);
-  Face(delta.Angle(), (time * delta.Angle()));
+  Face(delta.Angle(), (time * delta.Angle()), TurnRate, LeftMotor, RightMotor,
+       LMM, RMM, TimeMultiplier);
 
-  motors::Brake();
-  Wait(0.1);
+  motors::Brake(LeftMotor, RightMotor);
+  msleep(10);
 
   motors::Distance(delta.Magnitude(), delta.Magnitude(),
-                   time * delta.Magnitude());
+                   time * delta.Magnitude(), LeftMotor, RightMotor, LMM, RMM,
+                   TimeMultiplier);
   Position += temp;
 }
-void GoTo(P2D goal, float time) {
+void GoTo(P2D goal, float time, float TurnRate, int LeftMotor, int RightMotor,
+          float LMM, float RMM, float TimeMultiplier) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
   P2D delta(goal - Position);
-  Face(delta.Angle(), (time * delta.Angle()));
+  Face(delta.Angle(), (time * delta.Angle()), TurnRate, LeftMotor, RightMotor,
+       LMM, RMM, TimeMultiplier);
 
-  motors::Brake();
-  Wait(0.1);
+  motors::Brake(LeftMotor, RightMotor);
+  msleep(10);
 
   motors::Distance(delta.Magnitude(), delta.Magnitude(),
-                   time * delta.Magnitude());
+                   time * delta.Magnitude(), LeftMotor, RightMotor, LMM, RMM,
+                   TimeMultiplier);
   Position += temp;
 }
 } // namespace pathFind

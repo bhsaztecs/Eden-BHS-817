@@ -1,73 +1,88 @@
 #pragma once
 #include "basic.h"
 namespace sensors {
-bool dgtl::Value(int port) { return KIPR::digital(port); }
-
-float nlg::Value(int port) { return (float)KIPR::analog(port) / 4095; }
-int nlg::Raw(int port) { return KIPR::analog(port); }
-
-void accel::Calibrate() {
-  KIPR::accel_calibrate();
+using namespace BKND;
+using namespace BKND::sensors;
+using namespace KIPR;
+namespace dgtl {
+bool Value(int port) { return digital(port); }
+} // namespace dgtl
+namespace nlg {
+float Value(int port) { return (float)analog(port) / 4095; }
+int Raw(int port) { return analog(port); }
+} // namespace nlg
+namespace accel {
+using namespace BKND::sensors::accel;
+void Calibrate() {
+  accel_calibrate();
   Update();
 }
-float accel::Magnitude() {
-  Update();
-  return Value.Magnitude();
-}
-float accel::Pitch() {
-  Update();
-  return Value.Pitch();
-}
-float accel::Yaw() {
-  Update();
-  return Value.Yaw();
-}
-void accel::Update() {
-  Value.X = KIPR::accel_x();
-  Value.Y = KIPR::accel_y();
-  Value.Z = KIPR::accel_z();
-}
-
-void gyro::Calibrate() { KIPR::gyro_calibrate(); }
-float gyro::Magnitude() {
+float Magnitude() {
   Update();
   return Value.Magnitude();
 }
-float gyro::Pitch() {
+float Pitch() {
   Update();
   return Value.Pitch();
 }
-float gyro::Yaw() {
+float Yaw() {
   Update();
   return Value.Yaw();
 }
-void gyro::Update() {
-  Value.X = KIPR::gyro_x();
-  Value.Y = KIPR::gyro_y();
-  Value.Z = KIPR::gyro_z();
+void Update() {
+  Value.X = accel_x();
+  Value.Y = accel_y();
+  Value.Z = accel_z();
 }
+} // namespace accel
+namespace gyro {
+using namespace BKND::sensors::gyro;
+void Calibrate() { gyro_calibrate(); }
+float Magnitude() {
+  Update();
+  return Value.Magnitude();
+}
+float Pitch() {
+  Update();
+  return Value.Pitch();
+}
+float Yaw() {
+  Update();
+  return Value.Yaw();
+}
+void Update() {
+  Value.X = gyro_x();
+  Value.Y = gyro_y();
+  Value.Z = gyro_z();
+}
+} // namespace gyro
+namespace mag {
+using namespace BKND::sensors::mag;
 
-void mag::Calibrate() {
+void Calibrate() {
   // magneto_calibrate();
 }
-float mag::Magnitude() {
+float Magnitude() {
   Update();
   return Value.Magnitude();
 }
-float mag::Pitch() {
+float Pitch() {
   Update();
   return Value.Pitch();
 }
-float mag::Yaw() {
+float Yaw() {
   Update();
   return Value.Yaw();
 }
-void mag::Update() {
-  Value.X = KIPR::magneto_x();
-  Value.Y = KIPR::magneto_y();
-  Value.Z = KIPR::magneto_z();
+void Update() {
+  Value.X = magneto_x();
+  Value.Y = magneto_y();
+  Value.Z = magneto_z();
 }
-
-int bttry::Power() { return KIPR::power_level() * 100; }
-bool bttry::Critical() { return Power() < 33; }
+} // namespace mag
+namespace bttry {
+using namespace BKND::sensors::bttry;
+int Power() { return power_level() * 100; }
+bool Critical() { return Power() < 33; }
+} // namespace bttry
 } // namespace sensors

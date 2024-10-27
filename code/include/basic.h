@@ -21,6 +21,9 @@ using std::vector;
 bool Debugging;
 
 auto program_start_time = std::chrono::high_resolution_clock::now();
+
+namespace BKND {
+using namespace KIPR;
 class newThread;  // thread functionality
 class P2D;        // 2 dimensional coordinate
 class P3D;        // 3 dimensional coordinate
@@ -56,7 +59,6 @@ bool Clamp(A, B, C); /*Is B within A and C?*/
 /* IN {-> Min, Value, Max
  * OUT {-> Min<=Value<=Max
  */
-void Wait(float);       /*Wait for x seconds*/
 string PrettyTime(int); /*display milliseconds as min:sec.ms*/
 
 class P2D {
@@ -194,7 +196,8 @@ void Timer();    // start a clock that updates a global variable. does not end
 void HandsOff(); // starts handsoff/shutdownin
 void Status(string);           // overload of DefStatus
 void Status(char, char, char); // overload of DefStatus
-void Start(bool, bool);        // initializes variables
+void Start(bool, int, bool, int, int, float, float,
+           float); // initializes variables
 
 namespace buttons {
 void Show(bool); // show the buttons on screen?
@@ -235,14 +238,6 @@ void AngularPathfind(float, float); /*Updates orientation based on inputs*/
 void LinearPathfind(float, float);  /*Updates position based on inputs*/
 void DynamicPathfind(float, float); /*Updates position and orientation based on
                                        inputs. MAY DIVIDE BY 0*/
-float WheelRadius = 1.5;
-float AxleRadius = 3.5;
-const float TurnRate =
-    3.9; // i have no fucking idea how to calculate this man just
-// guess until you're right... supposed to be (axle length / wheel length ) +1
-// but that gives like 3.6 or something and that doesn't work so whatever...
-// maybe my unit conversions are wrong somewhere idk man
-const int AthenaMargin = 5;
 void Face(float, float); // face a certain degree heading in given time
 void GoTo(float, float,
           float);      // go to an (x,y) coordinate in a given time
@@ -250,7 +245,7 @@ void GoTo(P2D, float); // overload
 }; // namespace pathFind
 
 namespace sensors {
-short int StartLight; // start on light sensor port
+enum type { Analog, Digital };
 
 namespace dgtl {
 bool Value(int); // get the value of a port
@@ -292,49 +287,33 @@ bool Critical(); // is the battery less than 33% full?
 }; // namespace sensors
 
 namespace servos {
-short int ArmServo;
-short int ClawServo;
-void Set(float, float);    // go to a degree angle in a certain time
-void Move(float, float);   // change the degree angle in a certain time
-void Change(float, float); // go to a degree angle smoothly in a certain time
+void Set(int, float);    // go to a degree angle in a certain time
+void Move(int, float);   // change the degree angle in a certain time
+void Change(int, float); // go to a degree angle smoothly in a certain time
 }; // namespace servos
 
 namespace motors {
-short int LeftMotor;  // left motor port
-short int RightMotor; // right motor port
-float LMM;            // if a motor is drifting, adjust this number accordingly
-float RMM; // if its drifting to the left, lower the right motor multiplier
-// (between 1 and 0)
-float TimeMultiplier =
-    1; // multiplies time in order to adjust for distance loss (greater than 1)
-float LeftSpeed = 0;
-float RightSpeed = 0;
-void ClearMotorRotations(); // sets the counter to 0
-void Velocity(); // updates the global velocity variables, keep it in a
-                 // thread. it has no end.
-void Speed(float, float, float); // drive at a speed for a time
-void Distance(float, float,
+void ClearMotorRotations(int, int); // sets the counter to 0
+void Velocity(int, int, float &,
+              float &); // updates the global velocity variables, keep it in a
+                        // thread. it has no end.
+void Speed(float, float, float, int, int, float, float,
+           float); // drive at a speed for a time
+void Distance(float, float, float, int, int, float, float,
               float); // drive to a distance per wheel in this time
-void Rotation(float, float,
+void Rotation(float, float, float, int, int, float, float,
               float); // drive to an angle per wheel in this time
-void Accelerate(float, float, float); // interpolate to a speed
-void Brake();                         // turn on the brakes
-void init(int leftport = 0, int rightport = 0, float leftmult = 1,
-          float rightmult = 1) {
-  LeftMotor = leftport;
-  RightMotor = rightport;
-  LMM = leftmult;
-  RMM = rightmult;
-  ClearMotorRotations();
-}
+void Accelerate(float, float, float, int, int, float &, float &, float, float,
+                float); // interpolate to a speed
+void Brake(int, int);   // turn on the brakes
 }; // namespace motors
 
 class newThread {
 public:
-  KIPR::thread Thread;
+  thread Thread;
   newThread(
       void (*func)()) { // create a new thread with a function as a parameter
-    Thread = KIPR::thread_create(func);
+    Thread = thread_create(func);
   }
   void Run();  // start the thread
   void Kill(); // end the thread
@@ -364,9 +343,9 @@ int DTTW(float degrees) { DLOG return degrees * 5.55; }
 
 float TTDW(int ticks) { DLOG return ticks / 5.55; }
 
-float DTIW(float degrees) { DLOG return pathFind::WheelRadius * Rad(degrees); }
+float DTIW(float degrees, float radius) { DLOG return radius * Rad(degrees); }
 
-float ITDW(float inches) { DLOG return Deg(pathFind::WheelRadius / inches); }
+float ITDW(float inches, float radius) { DLOG return Deg(radius / inches); }
 
 float TTIW(int ticks) { DLOG return ticks / 206.49999936; }
 
@@ -379,11 +358,6 @@ float TTDA(int tics) { DLOG return (-0.081818 * tics) + 118.636; }
 int DTTC(float degrees) { DLOG return (12.05 * degrees) + 723.5; }
 
 float TTDC(int tics) { DLOG return (0.082 * tics) - 60; }
-
-void Wait(float time) {
-  DLOG motors::Brake();
-  KIPR::msleep(time * 1000);
-}
 
 template <typename A, typename B, typename C> bool Clamp(A min, B val, C max) {
   DLOG return (min < val && val < max);
@@ -423,3 +397,4 @@ worldSpace Position(0, 0, 0, 0);
 #include "pathfind.h"
 #include "sensor.h"
 #include "servo.h"
+} // namespace BKND
