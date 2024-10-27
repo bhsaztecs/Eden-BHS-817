@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: '"Simple title" - Adam/Eve'
+title: 'Simple title'
 labels: ''
 assignees: SamiyelF
 

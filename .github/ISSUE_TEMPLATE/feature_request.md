@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: '"Feature name" - Version (can be both)'
+title: 'Feature name'
 labels: ''
 assignees: SamiyelF
 
@@ -17,7 +17,7 @@ A clear and concise description of what you want to happen.
 A clear and concise description of any alternative solutions or features you've considered.
 
 **Temporary solution** (optional)
-What are you doing to get around this right now, if anything at all? 
+What are you doing to get around this right now, if anything at all?
 
 **Additional context**
 Add any other context or screenshots about the feature request here.
