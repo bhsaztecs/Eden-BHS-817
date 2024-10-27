@@ -3,7 +3,8 @@
 
 class Motors {
   int LeftPort, RightPort;
-  float LMM, RMM, TimeMultiplier;
+  float LMM, RMM, TMM;
+  float LeftSpeed = 0, RightSpeed = 0;
   void NormalizeMultipliers(float lmm, float rmm) {
     float WMM = 1;
     if (LMM > RMM) {
@@ -14,7 +15,7 @@ class Motors {
 
     RMM = RMM * WMM;
     LMM = LMM * WMM;
-    TimeMultiplier = WMM;
+    TMM = WMM;
   }
 
 public:
@@ -25,6 +26,31 @@ public:
     Clear();
   }
   void Clear() { BKND::motors::ClearMotorRotations(LeftPort, RightPort); }
+  void Velocity() {
+    BKND::motors::Velocity(LeftPort, RightPort, LeftSpeed, RightSpeed);
+  }
+  void Speed(float LeftGoalPercent, float RightGoalPercent,
+             float TimeInSeconds) {
+    BKND::motors::Speed(LeftGoalPercent, RightGoalPercent, TimeInSeconds,
+                        LeftPort, RightPort, LMM, RMM, TMM);
+  }
+  void Rotation(float LeftGoalDegrees, float RightGoalDegrees,
+                float TimeInSeconds) {
+    BKND::motors::Rotation(LeftGoalDegrees, RightGoalDegrees, TimeInSeconds,
+                           LeftPort, RightPort, LMM, RMM, TMM);
+  }
+  void Distance(float LeftGoalInches, float RightGoalInches,
+                float TimeInSeconds) {
+    BKND::motors::Distance(LeftGoalInches, RightGoalInches, TimeInSeconds,
+                           LeftPort, RightPort, LMM, RMM, TMM);
+  }
+  void Accelerate(float LeftGoalPercent, float RightGoalPercent,
+                  float TimeInSeconds) {
+    BKND::motors::Accelerate(LeftGoalPercent, RightGoalPercent, TimeInSeconds,
+                             LeftPort, RightPort, LeftSpeed, RightSpeed, LMM,
+                             RMM, TMM);
+  }
+  void Brake() { BKND::motors::Brake(LeftPort, RightPort); }
 };
 class Servos {
 public:
