@@ -64,15 +64,34 @@ public:
   void GoTo(float Angle, float Time) { BKND::servos::Move(port, Angle, Time); }
   float Angle() { return BKND::TTDA(KIPR::get_servo_position(port)); }
 };
-class Sensors {
+
+template <BKND::sensors::type> class Sensors {
+  int Port;
+
 public:
-  Sensors(int port, BKND::sensors::type) {}
+  Sensors(int port) {}
 };
+
+template <> class Sensors<BKND::sensors::type::Analog> {
+  int Port;
+
+public:
+  Sensors(int port) {}
+  float Value() { return BKND::sensors::nlg::Value(Port); }
+};
+template <> class Sensors<BKND::sensors::type::Digital> {
+  int Port;
+
+public:
+  Sensors(int port) {}
+  bool Value() { return BKND::sensors::dgtl::Value(Port); }
+};
+
 class PathFind {
 public:
   PathFind(float margin, Motors readfrom) {}
 };
 class Misc {
 public:
-  Misc(Sensors startlight, Motors applyto) {}
+  Misc(Sensors<BKND::sensors::type::Analog> startlight, Motors applyto) {}
 };
