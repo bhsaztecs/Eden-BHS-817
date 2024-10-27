@@ -5,11 +5,11 @@ using namespace BKND;
 using namespace BKND::sensors;
 using namespace KIPR;
 namespace dgtl {
-bool Value(int port) { return digital(port); }
+bool Value(int p_port) { return digital(p_port); }
 } // namespace dgtl
 namespace nlg {
-float Value(int port) { return (float)analog(port) / 4095; }
-int Raw(int port) { return analog(port); }
+float Value(int p_port) { return (float)analog(p_port) / 4095; }
+int Raw(int p_port) { return analog(p_port); }
 } // namespace nlg
 namespace accel {
 using namespace BKND::sensors::accel;

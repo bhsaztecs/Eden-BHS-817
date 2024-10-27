@@ -24,7 +24,7 @@ auto program_start_time = std::chrono::high_resolution_clock::now();
 
 namespace BKND {
 using namespace KIPR;
-class newThread;  // thread functionality
+class Thread;     // thread functionality
 class P2D;        // 2 dimensional coordinate
 class P3D;        // 3 dimensional coordinate
 class worldSpace; // 2 dimensional coordinate with additional functionality
@@ -71,26 +71,26 @@ public:
   }
   float Magnitude() { return std::sqrt(std::pow(X, 2) + std::pow(Y, 2)); }
   float Angle() { return Deg(std::atan2(Y, X)); }
-  P2D operator-(const P2D &other) {
-    return P2D(this->X - other.X, this->Y - other.Y);
+  P2D operator-(const P2D &p_other) {
+    return P2D(this->X - p_other.X, this->Y - p_other.Y);
   }
-  P2D operator+(const P2D &other) {
-    return P2D(this->X + other.X, this->Y + other.Y);
+  P2D operator+(const P2D &p_other) {
+    return P2D(this->X + p_other.X, this->Y + p_other.Y);
   }
-  void operator=(const P2D &other) {
-    this->X = other.X;
-    this->Y = other.Y;
+  void operator=(const P2D &p_other) {
+    this->X = p_other.X;
+    this->Y = p_other.Y;
   }
-  bool operator==(const P2D &other) {
-    return (this->X == other.X) && (this->Y == other.Y);
+  bool operator==(const P2D &p_other) {
+    return (this->X == p_other.X) && (this->Y == p_other.Y);
   }
-  void operator+=(const P2D &other) {
-    P2D temp(this->X + other.X, this->Y + other.Y);
+  void operator+=(const P2D &p_other) {
+    P2D temp(this->X + p_other.X, this->Y + p_other.Y);
     this->X = temp.X;
     this->Y = temp.Y;
   }
-  void operator-=(const P2D &other) {
-    P2D temp(this->X - other.X, this->Y - other.Y);
+  void operator-=(const P2D &p_other) {
+    P2D temp(this->X - p_other.X, this->Y - p_other.Y);
     this->X = temp.X;
     this->Y = temp.Y;
   }
@@ -100,38 +100,39 @@ public:
   float X;
   float Y;
   float Z;
-  P3D(float x = 0, float y = 0, float z = 0) {
-    this->X = x;
-    this->Y = y;
-    this->Z = z;
+  P3D(float p_x = 0, float p_y = 0, float p_z = 0) {
+    this->X = p_x;
+    this->Y = p_y;
+    this->Z = p_z;
   }
   float Magnitude() {
     return std::sqrt(std::pow(X, 2) + std::pow(Y, 2) + std::pow(Z, 2));
   }
   float Pitch() { return Deg(std::atan(Y / Z)); }
   float Yaw() { return Deg(std::atan(X / Z)); }
-  P3D operator-(const P3D &other) {
-    return P3D(this->X - other.X, this->Y - other.Y, this->Z - other.Z);
+  P3D operator-(const P3D &p_other) {
+    return P3D(this->X - p_other.X, this->Y - p_other.Y, this->Z - p_other.Z);
   }
-  P3D operator+(const P3D &other) {
-    return P3D(this->X + other.X, this->Y + other.Y, this->Z + other.Z);
+  P3D operator+(const P3D &p_other) {
+    return P3D(this->X + p_other.X, this->Y + p_other.Y, this->Z + p_other.Z);
   }
-  void operator=(const P3D &other) {
-    this->X = other.X;
-    this->Y = other.Y;
-    this->Z = other.Z;
+  void operator=(const P3D &p_other) {
+    this->X = p_other.X;
+    this->Y = p_other.Y;
+    this->Z = p_other.Z;
   }
-  bool operator==(const P3D &other) {
-    return (this->X == other.X) && (this->Y == other.Y) && (this->Z == other.Z);
+  bool operator==(const P3D &p_other) {
+    return (this->X == p_other.X) && (this->Y == p_other.Y) &&
+           (this->Z == p_other.Z);
   }
-  void operator+=(const P3D &other) {
-    P3D temp(this->X + other.X, this->Y + other.Y, this->Z + other.Z);
+  void operator+=(const P3D &p_other) {
+    P3D temp(this->X + p_other.X, this->Y + p_other.Y, this->Z + p_other.Z);
     this->X = temp.X;
     this->Y = temp.Y;
     this->Z = temp.Z;
   }
-  void operator-=(const P3D &other) {
-    P3D temp(this->X - other.X, this->Y - other.Y, this->Z - other.Z);
+  void operator-=(const P3D &p_other) {
+    P3D temp(this->X - p_other.X, this->Y - p_other.Y, this->Z - p_other.Z);
     this->X = temp.X;
     this->Y = temp.Y;
     this->Z = temp.Z;
@@ -142,37 +143,37 @@ public:
   float O = 0;
   float Radius = 0;
 
-  worldSpace(float x = 0, float y = 0, float r = 5, float o = 0) {
-    this->O = o;
-    this->X = x;
-    this->Y = y;
-    this->Radius = r;
+  worldSpace(float p_x = 0, float p_y = 0, float p_r = 5, float p_o = 0) {
+    this->O = p_o;
+    this->X = p_x;
+    this->Y = p_y;
+    this->Radius = p_r;
     Obstacles.push_back(this);
   }
 
-  bool operator==(const worldSpace &other) {
-    return (this->X == other.X) && (this->Y == other.Y);
+  bool operator==(const worldSpace &p_other) {
+    return (this->X == p_other.X) && (this->Y == p_other.Y);
   }
-  bool operator!=(const worldSpace &other) {
-    return (this->X != other.X) || (this->Y != other.Y);
+  bool operator!=(const worldSpace &p_other) {
+    return (this->X != p_other.X) || (this->Y != p_other.Y);
   }
-  worldSpace operator-(const P2D &other) {
-    return worldSpace(this->X - other.X, this->Y - other.Y);
+  worldSpace operator-(const P2D &p_other) {
+    return worldSpace(this->X - p_other.X, this->Y - p_other.Y);
   }
-  worldSpace operator+(const P2D &other) {
-    return worldSpace(this->X + other.X, this->Y + other.Y);
+  worldSpace operator+(const P2D &p_other) {
+    return worldSpace(this->X + p_other.X, this->Y + p_other.Y);
   }
-  void operator+=(const P2D &other) {
-    P2D temp(this->X + other.X, this->Y + other.Y);
+  void operator+=(const P2D &p_other) {
+    P2D temp(this->X + p_other.X, this->Y + p_other.Y);
     this->X = temp.X;
     this->Y = temp.Y;
   }
-  void operator-=(const P2D &other) {
-    P2D temp(this->X - other.X, this->Y - other.Y);
+  void operator-=(const P2D &p_other) {
+    P2D temp(this->X - p_other.X, this->Y - p_other.Y);
     this->X = temp.X;
     this->Y = temp.Y;
   }
-  worldSpace operator=(const worldSpace &other) { return other; }
+  worldSpace operator=(const worldSpace &p_other) { return p_other; }
 }; // namespace worldSpace:public P2D
 
 namespace misc {
@@ -308,28 +309,28 @@ void Accelerate(float, float, float, int, int, float &, float &, float, float,
 void Brake(int, int);   // turn on the brakes
 }; // namespace motors
 
-class newThread {
+class Thread {
 public:
-  thread Thread;
-  newThread(
-      void (*func)()) { // create a new thread with a function as a parameter
-    Thread = thread_create(func);
+  thread thethread;
+  Thread(
+      void (*p_func)()) { // create a new thread with a function as a parameter
+    thethread = thread_create(p_func);
   }
   void Run();  // start the thread
   void Kill(); // end the thread
 }; // namespace newThread
 
-float Interpolate(float timePercent, float delta) {
+float Interpolate(float p_timepercent, float p_delta) {
   DLOG return (
-      std::pow(timePercent, 2.16) /
-      (std::pow(timePercent, 2.16) + (std::pow((1 - timePercent), 2.16)))) *
-      delta;
+      std::pow(p_timepercent, 2.16) /
+      (std::pow(p_timepercent, 2.16) + (std::pow((1 - p_timepercent), 2.16)))) *
+      p_delta;
 }
 
-float Rad(float degrees) { DLOG return degrees * 0.01745329251; }
-float Deg(float radians) { DLOG return radians * 57.2957795131; }
-float mm(float inches) { return inches * 25.4; }
-float inch(float mm) { return mm / 25.4; }
+float Rad(float p_degrees) { DLOG return p_degrees * 0.01745329251; }
+float Deg(float p_radians) { DLOG return p_radians * 57.2957795131; }
+float mm(float p_inches) { return p_inches * 25.4; }
+float inch(float p_mm) { return p_mm / 25.4; }
 
 /*
  * ATBC();
@@ -339,40 +340,45 @@ float inch(float mm) { return mm / 25.4; }
  * C = wheels
  * Degrees to Ticks for the Wheels
  */
-int DTTW(float degrees) { DLOG return degrees * 5.55; }
+int DTTW(float p_degrees) { DLOG return p_degrees * 5.55; }
 
-float TTDW(int ticks) { DLOG return ticks / 5.55; }
+float TTDW(int p_ticks) { DLOG return p_ticks / 5.55; }
 
-float DTIW(float degrees, float radius) { DLOG return radius * Rad(degrees); }
+float DTIW(float p_degrees, float p_radius) {
+  DLOG return p_radius * Rad(p_degrees);
+}
 
-float ITDW(float inches, float radius) { DLOG return Deg(radius / inches); }
+float ITDW(float p_inches, float p_radius) {
+  DLOG return Deg(p_radius / p_inches);
+}
 
-float TTIW(int ticks) { DLOG return ticks / 206.49999936; }
+float TTIW(int p_ticks) { DLOG return p_ticks / 206.49999936; }
 
-int ITTW(float inches) { DLOG return inches * 206.49999936; }
+int ITTW(float p_inches) { DLOG return p_inches * 206.49999936; }
 /***********************/
-int DTTA(float degrees) { DLOG return (-12.2222 * degrees) + 1450; }
+int dtta(float p_degrees) { DLOG return (-12.2222 * p_degrees) + 1450; }
 
-float TTDA(int tics) { DLOG return (-0.081818 * tics) + 118.636; }
+float TTDA(int p_tics) { DLOG return (-0.081818 * p_tics) + 118.636; }
 
-int DTTC(float degrees) { DLOG return (12.05 * degrees) + 723.5; }
+int DTTC(float p_degrees) { DLOG return (12.05 * p_degrees) + 723.5; }
 
-float TTDC(int tics) { DLOG return (0.082 * tics) - 60; }
+float TTDC(int p_tics) { DLOG return (0.082 * p_tics) - 60; }
 
-template <typename A, typename B, typename C> bool Clamp(A min, B val, C max) {
-  DLOG return (min < val && val < max);
+template <typename A, typename B, typename C>
+bool Clamp(A p_min, B p_val, C p_max) {
+  DLOG return (p_min < p_val && p_val < p_max);
 }
 
 template <typename A, typename B, typename C>
-bool MarginOfError(A inputA, B inputB, C range) {
-  DLOG float min = inputB - range;
-  float max = inputB + range;
-  return Clamp(min, inputA, max);
+bool MarginOfError(A p_inputa, B p_inputb, C p_range) {
+  DLOG float min = p_inputb - p_range;
+  float max = p_inputb + p_range;
+  return Clamp(min, p_inputa, max);
 }
 
-string PrettyTime(int ms) {
+string PrettyTime(int p_ms) {
   int min, sec;
-  int totalms = ms;
+  int totalms = p_ms;
   min = totalms / (60 * 1000);
   totalms %= 60 * 1000;
   sec = totalms / 1000;

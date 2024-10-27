@@ -28,8 +28,8 @@ bool X() { return x_button_clicked(); }
 bool Y() { return y_button_clicked(); }
 bool Z() { return z_button_clicked(); }
 } // namespace pressed
-void Show(bool vis) {
-  if (vis) {
+void Show(bool p_vis) {
+  if (p_vis) {
     extra_buttons_show();
     return;
   }
@@ -37,11 +37,11 @@ void Show(bool vis) {
 }
 bool Visible() { return get_extra_buttons_visible(); }
 } // namespace buttons
-void waitforlight(int port) {
+void waitforlight(int p_port) {
   int on, off;
   std::cout << "Running";
   while (!any_button()) {
-    on = analog(port);
+    on = analog(p_port);
     std::cout << "ON: " << on << std::endl;
     console_clear();
     msleep(25);
@@ -52,7 +52,7 @@ void waitforlight(int port) {
   }
   msleep(500);
   while (!any_button()) {
-    off = analog(port);
+    off = analog(p_port);
     std::cout << "OFF: " << off << std::endl;
     console_clear();
     msleep(25);
@@ -65,7 +65,7 @@ void waitforlight(int port) {
   int thresh = (off - on) * 0.1 + on;
   std::cout << "thresh: " << thresh << std::endl;
 
-  for (int i = 0; analog(port) > thresh; i++) {
+  for (int i = 0; analog(p_port) > thresh; i++) {
     std::cout << "Waiting";
     if (i % 4 == 0) {
       std::cout << std::endl;
@@ -80,7 +80,7 @@ void waitforlight(int port) {
     console_clear();
   }
 }
-void DefStatus(int in) {
+void Status(int p_in) {
   DLOG std::cout << "Todo" << std::endl;
   return;
 }
@@ -90,31 +90,9 @@ void Timer() {
     CurrentMS++;
   }
 }
-void HandsOff(int lightport) {
-  DLOG waitforlight(lightport);
-  shut_down_in(119);
-}
-void Start(bool tournament, int lightport, bool debug, int LeftMotor,
-           int RightMotor) {
-  Debugging = debug;
-  // newThread Vel(motors::Velocity); todo
-  // Vel.Run(); todo
-
-  motors::Brake(LeftMotor, RightMotor);
-  motors::ClearMotorRotations(LeftMotor, RightMotor);
-  enable_servos();
-
-  if (tournament) {
-    msleep(1000);
-    Debugging = false;
-    HandsOff(lightport);
-  }
-  newThread Time(Timer);
-  Time.Run();
-}
 } // namespace misc
-void BKND::newThread::Run() { thread_start(this->Thread); }
-void BKND::newThread::Kill() {
-  thread_wait(this->Thread);
-  thread_destroy(this->Thread);
+void BKND::Thread::Run() { thread_start(this->thethread); }
+void BKND::Thread::Kill() {
+  thread_wait(this->thethread);
+  thread_destroy(this->thethread);
 }

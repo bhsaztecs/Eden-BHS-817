@@ -4,22 +4,30 @@ Motors tank(0 /*left port*/, 3 /*right port*/, 1.0 /*left motor multiplier*/,
 Servos arm(0 /*port*/, BKND::P2D(-45 /*degrees*/, 125 /*tics*/) /*minimum*/,
            BKND::P2D(45, 2047) /*maximum*/);
 Servos claw(1, BKND::P2D(0, 0), BKND::P2D(90, 1020));
-Sensors startlight(0 /*port*/, BKND::sensors::type::Analog /*sensor type*/);
+Sensors<BKND::sensors::type::Analog> /*sensor type*/
+    startlight(0 /*port*/);
 PathFind
     navigate(5 /*margin of error (lower is more precise, higher is faster*/,
+             2.8, /*turnrate*/
              tank /*what wheels to read from*/);
-Misc bot(startlight, tank);
 
+void Wait(float seconds) {
+  tank.Brake();
+  KIPR::msleep(seconds * 1000);
+}
 void update() {
-  while (true) {     // indefinitely
-    BKND::Wait(0.5); // delay
-    std::cout << TTDA(arm.Position()) << std::endl;
+  while (true) { // indefinitely
+    Wait(0.5);   // delay
+    std::cout << BKND::TTDA(arm.Angle()) << std::endl;
   }
 }
 
 int main() {
-  bot.Start(false /*tournament?*/);
-  Thread UPDATE(update);
+  if (true /*tournament mode*/) {
+    BKND::misc::waitforlight(startlight.Port);
+    KIPR::shut_down_in(119);
+  }
+  BKND::Thread UPDATE(update);
   UPDATE.Run();
   Wait(1);
   tank.Accelerate(100 /*left goal*/, 100 /*right goal*/,

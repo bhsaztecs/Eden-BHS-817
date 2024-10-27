@@ -4,26 +4,28 @@ namespace servos {
 using namespace BKND;
 using namespace BKND::servos;
 using namespace KIPR;
-void Set(int port, float Angle) { DLOG set_servo_position(port, DTTA(Angle)); }
-void Change(int port, float changeInAngle) {
-  DLOG int curA = TTDA(get_servo_position(port));
-  int posA = curA + changeInAngle;
-
-  Set(port, posA);
+void Set(int p_port, float p_angle) {
+  DLOG set_servo_position(p_port, DTTA(p_angle));
 }
-void Move(int port, float Angle, float timeInSeconds) {
-  DLOG int curAng = get_servo_position(port);
-  Angle = DTTA(Angle);
-  int it = Angle - curAng;
+void Change(int p_port, float p_changeinangle) {
+  DLOG int curA = TTDA(get_servo_position(p_port));
+  int posA = curA + p_changeinangle;
+
+  Set(p_port, posA);
+}
+void Move(int p_port, float p_angle, float p_timeinseconds) {
+  DLOG int curAng = get_servo_position(p_port);
+  p_angle = DTTA(p_angle);
+  int it = p_angle - curAng;
   if (it > 0) {
-    for (int a = curAng; a < Angle; a += 10) {
-      Set(port, TTDA(a));
-      msleep(abs(timeInSeconds / it) * 10 * 1000);
+    for (int a = curAng; a < p_angle; a += 10) {
+      Set(p_port, TTDA(a));
+      msleep(fabs(p_timeinseconds / it) * 10 * 1000);
     }
   } else {
-    for (int a = curAng; a > Angle; a -= 10) {
-      Set(port, TTDA(a));
-      msleep(abs(timeInSeconds / it) * 10 * 1000);
+    for (int a = curAng; a > p_angle; a -= 10) {
+      Set(p_port, TTDA(a));
+      msleep(fabs(p_timeinseconds / it) * 10 * 1000);
     }
   }
 }

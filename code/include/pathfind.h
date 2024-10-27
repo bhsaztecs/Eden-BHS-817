@@ -5,86 +5,69 @@ namespace pathFind {
 using namespace BKND;
 using namespace BKND::pathFind;
 using namespace KIPR;
-void AthenaDecision(float deltaL, float deltaR, float AthenaMargin) {
-  DLOG if (MarginOfError(abs(deltaL), abs(deltaR), AthenaMargin) &&
-           (deltaL != deltaR)) {
-    AngularPathfind(deltaL, deltaR);
+void AthenaDecision(float p_deltal, float p_deltar, float p_athenamargin) {
+  DLOG if (MarginOfError(abs(p_deltal), abs(p_deltar), p_athenamargin) &&
+           (p_deltal != p_deltar)) {
+    AngularPathfind(p_deltal, p_deltar);
     return;
   }
-  if (MarginOfError(deltaL, deltaR, AthenaMargin)) {
-    LinearPathfind(deltaL, deltaR);
+  if (MarginOfError(p_deltal, p_deltar, p_athenamargin)) {
+    LinearPathfind(p_deltal, p_deltar);
     return;
   }
-  DynamicPathfind(deltaL, deltaR);
+  DynamicPathfind(p_deltal, p_deltar);
   return;
 }
-void AngularPathfind(float deltaL, float deltaR, float TurnRate) {
-  DLOG float Wa = (abs(deltaL) + abs(deltaR)) / 2;
-  float Ooffset = Wa / TurnRate;
+void AngularPathfind(float p_deltal, float p_deltar, float p_turnrate) {
+  DLOG float Wa = (fabs(p_deltal) + fabs(p_deltar)) / 2;
+  float Ooffset = Wa / p_turnrate;
 
   Position.O += Ooffset;
 }
 
-void LinearPathfind(float deltaL, float deltaR) {
-  DLOG float Distance = DTIW((deltaL + deltaR) / 2);
+void LinearPathfind(float p_deltal, float p_deltar) {
+  DLOG float Distance = DTIW((p_deltal + p_deltar) / 2);
   P2D delta(Distance * cos(Position.O), Distance * sin(Position.O));
 
   Position.X += delta.X;
   Position.Y += delta.Y;
 }
 
-void DynamicPathfind(float deltaL, float deltaR) {
-  DLOG float c = (deltaL + deltaR) / (deltaL - deltaR);
-  float a = (deltaL + deltaR) / 2;
-  float theta = a / abs(c);
-  P2D prime(abs(c) * cos(theta), abs(c) * sin(theta));
+void DynamicPathfind(float p_deltal, float p_deltar) {
+  DLOG float c = (p_deltal + p_deltar) / (p_deltal - p_deltar);
+  float a = (p_deltal + p_deltar) / 2;
+  float theta = a / fabs(c);
+  P2D prime(fabs(c) * cos(theta), fabs(c) * sin(theta));
 
   Position += prime;
   Position.O += theta;
 }
-void Face(float deg, float time, float TurnRate, int LeftMotor, int RightMotor,
-          float LMM, float RMM, float TimeMultiplier) {
+void Face(float p_deg, float p_time, float p_turnrate, int p_leftmotor,
+          int p_rightmotor, float p_lmm, float p_rmm, float p_timemultiplier) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
-  float DeltaO = Rad(deg) - Position.O;
-  float WheelAngle = Deg(DeltaO * (TurnRate / 2));
-  motors::Rotation(WheelAngle, -WheelAngle, time, LeftMotor, RightMotor, LMM,
-                   RMM, TimeMultiplier);
+  float DeltaO = Rad(p_deg) - Position.O;
+  float WheelAngle = Deg(DeltaO * (p_turnrate / 2));
+  motors::Rotation(WheelAngle, -WheelAngle, p_time, p_leftmotor, p_rightmotor,
+                   p_lmm, p_rmm, p_timemultiplier);
   Position += temp;
 }
-void GoTo(float x, float y, float time, float TurnRate, int LeftMotor,
-          int RightMotor, float LMM, float RMM, float TimeMultiplier) {
+void GoTo(P2D p_goal, float p_time, float p_turnrate, int p_leftmotor,
+          int p_rightmotor, float p_lmm, float p_rmm, float p_timemultiplier) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
-  P2D delta(x - Position.X, y - Position.Y);
-  Face(delta.Angle(), (time * delta.Angle()), TurnRate, LeftMotor, RightMotor,
-       LMM, RMM, TimeMultiplier);
+  P2D delta(p_goal - Position);
+  Face(delta.Angle(), (p_time * delta.Angle()), p_turnrate, p_leftmotor,
+       p_rightmotor, p_lmm, p_rmm, p_timemultiplier);
 
-  motors::Brake(LeftMotor, RightMotor);
+  motors::Brake(p_leftmotor, p_rightmotor);
   msleep(10);
 
   motors::Distance(delta.Magnitude(), delta.Magnitude(),
-                   time * delta.Magnitude(), LeftMotor, RightMotor, LMM, RMM,
-                   TimeMultiplier);
-  Position += temp;
-}
-void GoTo(P2D goal, float time, float TurnRate, int LeftMotor, int RightMotor,
-          float LMM, float RMM, float TimeMultiplier) {
-  DLOG worldSpace temp = Position;
-  worldSpace zero;
-  Position = zero;
-  P2D delta(goal - Position);
-  Face(delta.Angle(), (time * delta.Angle()), TurnRate, LeftMotor, RightMotor,
-       LMM, RMM, TimeMultiplier);
-
-  motors::Brake(LeftMotor, RightMotor);
-  msleep(10);
-
-  motors::Distance(delta.Magnitude(), delta.Magnitude(),
-                   time * delta.Magnitude(), LeftMotor, RightMotor, LMM, RMM,
-                   TimeMultiplier);
+                   p_time * delta.Magnitude(), p_leftmotor, p_rightmotor, p_lmm,
+                   p_rmm, p_timemultiplier);
   Position += temp;
 }
 } // namespace pathFind
