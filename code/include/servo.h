@@ -1,21 +1,21 @@
 #pragma once
 #include "basic.h"
-
-void servos::Set(float armAngle,
-                 float clawAngle = TTDC(get_servo_position(ClawServo))) {
-  DLOG set_servo_position(ArmServo, DTTA(armAngle));
-  set_servo_position(ClawServo, DTTC(clawAngle));
+namespace servos {
+void Set(float armAngle,
+         float clawAngle = TTDC(KIPR::get_servo_position(ClawServo))) {
+  DLOG KIPR::set_servo_position(ArmServo, DTTA(armAngle));
+  KIPR::set_servo_position(ClawServo, DTTC(clawAngle));
 }
-void servos::Change(float changeInArmAngle, float changeInClawAngle = 0) {
-  DLOG int curA = TTDA(get_servo_position(ArmServo));
-  int curC = TTDC(get_servo_position(ClawServo));
+void Change(float changeInArmAngle, float changeInClawAngle = 0) {
+  DLOG int curA = TTDA(KIPR::get_servo_position(ArmServo));
+  int curC = TTDC(KIPR::get_servo_position(ClawServo));
   int posA = curA + changeInArmAngle;
   int posC = curC + changeInClawAngle;
 
-  servos::Set(posA, posC);
+  Set(posA, posC);
 }
-void servos::Move(float armAngle, float timeInSeconds) {
-  DLOG int curAng = get_servo_position(ArmServo);
+void Move(float armAngle, float timeInSeconds) {
+  DLOG int curAng = KIPR::get_servo_position(ArmServo);
   armAngle = DTTA(armAngle);
   int it = armAngle - curAng;
   if (it > 0) {
@@ -30,3 +30,4 @@ void servos::Move(float armAngle, float timeInSeconds) {
     }
   }
 }
+} // namespace servos

@@ -1,7 +1,9 @@
 #pragma once
-
+namespace KIPR {
 #include "../kipr/wombat.h"
+}
 #include <chrono>
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -22,23 +24,8 @@ class newThread;  // thread functionality
 class P2D;        // 2 dimensional coordinate
 class P3D;        // 3 dimensional coordinate
 class worldSpace; // 2 dimensional coordinate with additional functionality
-class motors;     // motor control
-class buttons;    // on screen button control (abcxyz)
-class misc;       // other stuff i couldn't label
-class dgtl;       // digital sensors
-class nlg;        // analog sensors
-class accel;      // accelerometer control
-class gyro;       // gyroscope control
-class mag;        // magnetometer control WIP
-class bttry;      // battery control
-class sensors;    //(dgtl,nlg,accel,gyro,mag,bttry) wrapper
-class servos;     // servo control (inverse kinematics to come
-class up;         // button up (not pressed)
-class down;       // button down (pressed)
-class pressed;    // button down (pressed, only returns true once per press)
-
 std::vector<worldSpace *> Obstacles;
-
+namespace motors {
 short int LeftMotor;  // left motor port
 short int RightMotor; // right motor port
 float LMM;            // if a motor is drifting, adjust this number accordingly
@@ -48,11 +35,25 @@ float TimeMultiplier =
     1; // multiplies time in order to adjust for distance loss (greater than 1)
 float LeftSpeed = 0;
 float RightSpeed = 0;
-
+} // namespace motors
+namespace buttons {} // namespace buttons
+namespace misc {}    // namespace misc
+namespace dgtl {}    // namespace dgtl
+namespace nlg {}     // namespace nlg
+namespace accel {}   // namespace accel
+namespace gyro {}    // namespace gyro
+namespace mag {}     // namespace mag
+namespace bttry {}   // namespace bttry
+namespace sensors {
 short int StartLight; // start on light sensor port
-
+} // namespace sensors
+namespace servos {
 short int ArmServo;
 short int ClawServo;
+} // namespace servos
+namespace up {}      // namespace up
+namespace down {}    // namespace down
+namespace pressed {} // namespace pressed
 
 bool Debugging;
 long int CurrentMS = 0;
@@ -143,7 +144,7 @@ public:
     this->X = temp.X;
     this->Y = temp.Y;
   }
-};
+}; // namespace P2D
 class P3D {
 public:
   float X;
@@ -185,7 +186,7 @@ public:
     this->Y = temp.Y;
     this->Z = temp.Z;
   }
-};
+}; // namespace P3D
 class worldSpace : public P2D {
 public:
   float O = 0;
@@ -222,177 +223,145 @@ public:
     this->Y = temp.Y;
   }
   worldSpace operator=(const worldSpace &other) { return other; }
-};
+}; // namespace worldSpace:public P2D
 
 class newThread {
 public:
-  thread Thread;
+  KIPR::thread Thread;
   newThread(
       void (*func)()) { // create a new thread with a function as a parameter
-    Thread = thread_create(func);
+    Thread = KIPR::thread_create(func);
   }
   void Run();  // start the thread
   void Kill(); // end the thread
-};
-class up {
-public:
-  static bool A(); // is a button not pressed
-  static bool B();
-  static bool C();
-  static bool X();
-  static bool Y();
-  static bool Z();
-};
-class down {
-public:
-  static bool A(); // is a button pressed
-  static bool B();
-  static bool C();
-  static bool X();
-  static bool Y();
-  static bool Z();
-};
-class pressed {
-public:
-  static bool A(); // has a button been clicked
-  static bool B();
-  static bool C();
-  static bool X();
-  static bool Y();
-  static bool Z();
-};
-class buttons {
-public:
-  void Show(bool); // show the buttons on screen?
-  bool Visible();  // are the buttons on screen?
-  pressed Pressed;
-  up Up;
-  down Down;
-};
-class misc {
-private:
-  static void DefStatus(char[]); /*
-   print a huge block of sensor values (if enabled)
-   in: 3 char hex array (fff,000,fa6,etc)
-   00:OXY of the bot (print worldspace)
-   01:Battery level of the bot
-   02:every motor position in ticks
-   03:accelerometer values and average
-   04:gyroscope values and average
-   05:compass angle
-   06:motor multiplier values
-   07:servo positions in tics
-   08:servos enabled?
-   09:digital values
-   10:analog values
-   11:sets debugging on or off
-   */
-public:
-  static void
-  Timer(); // start a clock that updates a global variable. does not end
-  static void HandsOff();               // starts handsoff/shutdownin
-  static void Status(string);           // overload of DefStatus
-  static void Status(char, char, char); // overload of DefStatus
-  static void Start(bool, bool);        // initializes variables
+}; // namespace newThread
 
-  buttons Buttons;
-};
+namespace misc {
+void DefStatus(int); /*
+ print a huge block of sensor values (if enabled)
+ in: 3 char hex array (fff,000,fa6,etc)
+ 00:OXY of the bot (print worldspace)
+ 01:Battery level of the bot
+ 02:every motor position in ticks
+ 03:accelerometer values and average
+ 04:gyroscope values and average
+ 05:compass angle
+ 06:motor multiplier values
+ 07:servo positions in tics
+ 08:servos enabled?
+ 09:digital values
+ 10:analog values
+ 11:sets debugging on or off
+ */
+void Timer();    // start a clock that updates a global variable. does not end
+void HandsOff(); // starts handsoff/shutdownin
+void Status(string);           // overload of DefStatus
+void Status(char, char, char); // overload of DefStatus
+void Start(bool, bool);        // initializes variables
 
-class pathFind {
-public:
-  static void Face(float, float); // face a certain degree heading in given time
-  static void GoTo(float, float,
-                   float);      // go to an (x,y) coordinate in a given time
-  static void GoTo(P2D, float); // overload
-};
+namespace buttons {
+void Show(bool); // show the buttons on screen?
+bool Visible();  // are the buttons on screen?
+namespace up {
+bool A(); // is a button not pressed
+bool B();
+bool C();
+bool X();
+bool Y();
+bool Z();
+}; // namespace up
+namespace down {
+bool A(); // is a button pressed
+bool B();
+bool C();
+bool X();
+bool Y();
+bool Z();
+}; // namespace down
+namespace pressed {
+bool A(); // has a button been clicked
+bool B();
+bool C();
+bool X();
+bool Y();
+bool Z();
+}; // namespace pressed
+}; // namespace buttons
+}; // namespace misc
 
-class dgtl {
-public:
-  static bool Value(int); // get the value of a port
-};
-class nlg {
-public:
-  static float Value(int); // get the value of a port as a percent of the max
-  static int Raw(int);     // get the raw value of a port
-};
-class accel {
-public:
-  P3D Value;
-  void Calibrate();  // calibrates the accelerometer
-  float Magnitude(); // gets the magnitude of the vector the accelerometer is
-                     // pointing at
-  float Pitch();     // gets the pitch of the vector
-  float Yaw();       // gets the yaw of the vector
-  void Update();     // update the vector's values. (automatically called on
-                     // mag,pitch,yaw)
-};
-class gyro {
-public:
-  P3D Value;
-  void Calibrate();
-  float Magnitude();
-  float Pitch();
-  float Yaw();
-  void Update();
-};
-class mag {
-public:
-  P3D Value;
-  void Calibrate();
-  float Magnitude();
-  float Pitch();
-  float Yaw();
-  void Update();
-};
-class bttry {
-public:
-  static int Power();     // get the power level from 0-100
-  static bool Critical(); // is the battery less than 33% full?
-};
-class sensors {
-public:
-  sensors(int startlight = 0) { StartLight = startlight; }
-  dgtl Digital;
-  nlg Analog;
-  accel Accel;
-  gyro Gyro;
-  mag Mag;
-  bttry Battery;
-};
+namespace pathFind {
+void Face(float, float); // face a certain degree heading in given time
+void GoTo(float, float,
+          float);      // go to an (x,y) coordinate in a given time
+void GoTo(P2D, float); // overload
+}; // namespace pathFind
 
-class servos {
-public:
-  servos(int armport, int clawport) {
-    ArmServo = armport;
-    ClawServo = clawport;
-  }
-  static void Set(float, float);  // go to a degree angle in a certain time
-  static void Move(float, float); // change the degree angle in a certain time
-  static void Change(float,
-                     float); // go to a degree angle smoothly in a certain time
-};
+namespace sensors {
+namespace dgtl {
+bool Value(int); // get the value of a port
+}; // namespace dgtl
+namespace nlg {
+float Value(int); // get the value of a port as a percent of the max
+int Raw(int);     // get the raw value of a port
+}; // namespace nlg
+namespace accel {
+P3D Value;
+void Calibrate();  // calibrates the accelerometer
+float Magnitude(); // gets the magnitude of the vector the accelerometer is
+                   // pointing at
+float Pitch();     // gets the pitch of the vector
+float Yaw();       // gets the yaw of the vector
+void Update();     // update the vector's values. (automatically called on
+                   // mag,pitch,yaw)
+}; // namespace accel
+namespace gyro {
+P3D Value;
+void Calibrate();
+float Magnitude();
+float Pitch();
+float Yaw();
+void Update();
+}; // namespace gyro
+namespace mag {
+P3D Value;
+void Calibrate();
+float Magnitude();
+float Pitch();
+float Yaw();
+void Update();
+}; // namespace mag
+namespace bttry {
+int Power();     // get the power level from 0-100
+bool Critical(); // is the battery less than 33% full?
+}; // namespace bttry
+}; // namespace sensors
 
-class motors {
-public:
-  motors(int leftport = 0, int rightport = 0, float leftmult = 1,
-         float rightmult = 1) {
-    LeftMotor = leftport;
-    RightMotor = rightport;
-    LMM = leftmult;
-    RMM = rightmult;
-    ClearMotorRotations();
-  }
-  static void ClearMotorRotations(); // sets the counter to 0
-  static void Velocity(); // updates the global velocity variables, keep it in a
-                          // thread. it has no end.
-  static void Speed(float, float, float); // drive at a speed for a time
-  static void Distance(float, float,
-                       float); // drive to a distance per wheel in this time
-  static void Rotation(float, float,
-                       float); // drive to an angle per wheel in this time
-  static void Accelerate(float, float, float); // interpolate to a speed
-  static void Brake();                         // turn on the brakes
-};
+namespace servos {
+void Set(float, float);    // go to a degree angle in a certain time
+void Move(float, float);   // change the degree angle in a certain time
+void Change(float, float); // go to a degree angle smoothly in a certain time
+}; // namespace servos
+
+namespace motors {
+void ClearMotorRotations(); // sets the counter to 0
+void Velocity(); // updates the global velocity variables, keep it in a
+                 // thread. it has no end.
+void Speed(float, float, float); // drive at a speed for a time
+void Distance(float, float,
+              float); // drive to a distance per wheel in this time
+void Rotation(float, float,
+              float); // drive to an angle per wheel in this time
+void Accelerate(float, float, float); // interpolate to a speed
+void Brake();                         // turn on the brakes
+void init(int leftport = 0, int rightport = 0, float leftmult = 1,
+          float rightmult = 1) {
+  LeftMotor = leftport;
+  RightMotor = rightport;
+  LMM = leftmult;
+  RMM = rightmult;
+  ClearMotorRotations();
+}
+}; // namespace motors
 
 float Interpolate(float timePercent, float delta) {
   DLOG return (
@@ -436,7 +405,7 @@ float TTDC(int tics) { DLOG return (0.082 * tics) - 60; }
 
 void Wait(float time) {
   DLOG motors::Brake();
-  msleep(time * 1000);
+  KIPR::msleep(time * 1000);
 }
 
 template <typename A, typename B, typename C> bool Clamp(A min, B val, C max) {
