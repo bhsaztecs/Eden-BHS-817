@@ -1,4 +1,3 @@
-#include <cmath>
 class thread {};
 
 thread thread_create(void()) {

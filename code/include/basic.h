@@ -1,14 +1,14 @@
 #pragma once
-
+namespace KIPR {
 #include "../kipr/wombat.h"
+}
 #include <chrono>
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
 using std::string;
 using std::vector;
-
-auto program_start_time = std::chrono::high_resolution_clock::now();
 #define DLOG                                                                   \
   if (Debugging) {                                                             \
     auto now = std::chrono::high_resolution_clock::now();                      \
@@ -18,53 +18,16 @@ auto program_start_time = std::chrono::high_resolution_clock::now();
               << ") Time since start: " << PrettyTime(elapsedtime.count())     \
               << std::endl;                                                    \
   }
+bool Debugging;
+
+auto program_start_time = std::chrono::high_resolution_clock::now();
 class newThread;  // thread functionality
 class P2D;        // 2 dimensional coordinate
 class P3D;        // 3 dimensional coordinate
 class worldSpace; // 2 dimensional coordinate with additional functionality
-class motors;     // motor control
-class buttons;    // on screen button control (abcxyz)
-class misc;       // other stuff i couldn't label
-class dgtl;       // digital sensors
-class nlg;        // analog sensors
-class accel;      // accelerometer control
-class gyro;       // gyroscope control
-class mag;        // magnetometer control WIP
-class bttry;      // battery control
-class sensors;    //(dgtl,nlg,accel,gyro,mag,bttry) wrapper
-class servos;     // servo control (inverse kinematics to come
-class up;         // button up (not pressed)
-class down;       // button down (pressed)
-class pressed;    // button down (pressed, only returns true once per press)
-
 std::vector<worldSpace *> Obstacles;
 
-short int LeftMotor;  // left motor port
-short int RightMotor; // right motor port
-float LMM;            // if a motor is drifting, adjust this number accordingly
-float RMM; // if its drifting to the left, lower the right motor multiplier
-// (between 1 and 0)
-float TimeMultiplier =
-    1; // multiplies time in order to adjust for distance loss (greater than 1)
-float LeftSpeed = 0;
-float RightSpeed = 0;
-
-short int StartLight; // start on light sensor port
-
-short int ArmServo;
-short int ClawServo;
-
-bool Debugging;
 long int CurrentMS = 0;
-
-float WheelRadius = 1.5;
-float AxleRadius = 3.5;
-const float TurnRate =
-    3.9; // i have no fucking idea how to calculate this man just
-// guess until you're right... supposed to be (axle length / wheel length ) +1
-// but that gives like 3.6 or something and that doesn't work so whatever...
-// maybe my unit conversions are wrong somewhere idk man
-const int AthenaMargin = 5;
 
 float Deg(float);  /*Convert Radians to Degrees*/
 float Rad(float);  /*Convert Degrees to Radians*/
@@ -80,35 +43,21 @@ float TTDW(int);   /*convert ticks to degrees (for the wheel)*/
 float TTIW(int);   /*convert ticks to inches (for the wheel)*/
 float Interpolate(float,
                   float); /*get a smooth transition from point a to point b*/
-/*IN {-> Time (from 1 to 0), Delta (from 0 to this number)
+/* IN {-> Time (from 1 to 0), Delta (from 0 to this number)
  * OUT{-> value returned from the equation.
- * USE{-> put it in a for loop, i.e.
- * for(float i = 0; i < 1; i+=0.01){
- *		motors::Speed(Interpolate(i,1),Interpolate(i,1),0.1);
- * }
- * this leads to a very smooth increase in speed (3rd derivative continuous
  */
 template <typename A, typename B, typename C>
 bool MarginOfError(A, B, C); /*is a close to b?*/
-/*IN {-> Check, Goal, Range
+/* IN {-> Check, Goal, Range
  * OUT{-> true/false
- * is A within BB1C?
  */
 template <typename A, typename B, typename C>
 bool Clamp(A, B, C); /*Is B within A and C?*/
-/*IN {-> Min, Value, Max
+/* IN {-> Min, Value, Max
  * OUT {-> Min<=Value<=Max
  */
 void Wait(float);       /*Wait for x seconds*/
 string PrettyTime(int); /*display milliseconds as min:sec.ms*/
-void AthenaDecision(float,
-                    float); /*Decide which algorithm to use, then uses it.*/
-/* IN {-> Change in Left wheel position, Change in Right wheel position
- */
-void AngularPathfind(float, float); /*Updates orientation based on inputs*/
-void LinearPathfind(float, float);  /*Updates position based on inputs*/
-void DynamicPathfind(float, float); /*Updates position and orientation based on
-                                       inputs. MAY DIVIDE BY 0*/
 
 class P2D {
 public:
@@ -222,177 +171,174 @@ public:
     this->Y = temp.Y;
   }
   worldSpace operator=(const worldSpace &other) { return other; }
-};
+}; // namespace worldSpace:public P2D
+
+namespace misc {
+void DefStatus(int); /*
+ print a huge block of sensor values (if enabled)
+ in: 12bits, i.e. 0xfff, 0b1111_1111_1111
+ 00: OXY of the bot (print worldspace)
+ 01: Battery level of the bot
+ 02: every motor position in ticks
+ 03: accelerometer values and average
+ 04: gyroscope values and average
+ 05: compass angle
+ 06: motor multiplier values
+ 07: servo positions in tics
+ 08: servos enabled?
+ 09: digital values
+ 10: analog values
+ 11: sets debugging on or off
+ */
+void Timer();    // start a clock that updates a global variable. does not end
+void HandsOff(); // starts handsoff/shutdownin
+void Status(string);           // overload of DefStatus
+void Status(char, char, char); // overload of DefStatus
+void Start(bool, bool);        // initializes variables
+
+namespace buttons {
+void Show(bool); // show the buttons on screen?
+bool Visible();  // are the buttons on screen?
+namespace up {
+bool A(); // is a button not pressed
+bool B();
+bool C();
+bool X();
+bool Y();
+bool Z();
+}; // namespace up
+namespace down {
+bool A(); // is a button pressed
+bool B();
+bool C();
+bool X();
+bool Y();
+bool Z();
+}; // namespace down
+namespace pressed {
+bool A(); // has a button been clicked
+bool B();
+bool C();
+bool X();
+bool Y();
+bool Z();
+}; // namespace pressed
+}; // namespace buttons
+}; // namespace misc
+
+namespace pathFind {
+void AthenaDecision(float,
+                    float); /*Decide which algorithm to use, then uses it.*/
+/* IN {-> Change in Left wheel position, Change in Right wheel position
+ */
+void AngularPathfind(float, float); /*Updates orientation based on inputs*/
+void LinearPathfind(float, float);  /*Updates position based on inputs*/
+void DynamicPathfind(float, float); /*Updates position and orientation based on
+                                       inputs. MAY DIVIDE BY 0*/
+float WheelRadius = 1.5;
+float AxleRadius = 3.5;
+const float TurnRate =
+    3.9; // i have no fucking idea how to calculate this man just
+// guess until you're right... supposed to be (axle length / wheel length ) +1
+// but that gives like 3.6 or something and that doesn't work so whatever...
+// maybe my unit conversions are wrong somewhere idk man
+const int AthenaMargin = 5;
+void Face(float, float); // face a certain degree heading in given time
+void GoTo(float, float,
+          float);      // go to an (x,y) coordinate in a given time
+void GoTo(P2D, float); // overload
+}; // namespace pathFind
+
+namespace sensors {
+short int StartLight; // start on light sensor port
+
+namespace dgtl {
+bool Value(int); // get the value of a port
+}; // namespace dgtl
+namespace nlg {
+float Value(int); // get the value of a port as a percent of the max
+int Raw(int);     // get the raw value of a port
+}; // namespace nlg
+namespace accel {
+P3D Value;
+void Calibrate();  // calibrates the accelerometer
+float Magnitude(); // gets the magnitude of the vector the accelerometer is
+                   // pointing at
+float Pitch();     // gets the pitch of the vector
+float Yaw();       // gets the yaw of the vector
+void Update();     // update the vector's values. (automatically called on
+                   // mag,pitch,yaw)
+}; // namespace accel
+namespace gyro {
+P3D Value;
+void Calibrate();
+float Magnitude();
+float Pitch();
+float Yaw();
+void Update();
+}; // namespace gyro
+namespace mag {
+P3D Value;
+void Calibrate();
+float Magnitude();
+float Pitch();
+float Yaw();
+void Update();
+}; // namespace mag
+namespace bttry {
+int Power();     // get the power level from 0-100
+bool Critical(); // is the battery less than 33% full?
+}; // namespace bttry
+}; // namespace sensors
+
+namespace servos {
+short int ArmServo;
+short int ClawServo;
+void Set(float, float);    // go to a degree angle in a certain time
+void Move(float, float);   // change the degree angle in a certain time
+void Change(float, float); // go to a degree angle smoothly in a certain time
+}; // namespace servos
+
+namespace motors {
+short int LeftMotor;  // left motor port
+short int RightMotor; // right motor port
+float LMM;            // if a motor is drifting, adjust this number accordingly
+float RMM; // if its drifting to the left, lower the right motor multiplier
+// (between 1 and 0)
+float TimeMultiplier =
+    1; // multiplies time in order to adjust for distance loss (greater than 1)
+float LeftSpeed = 0;
+float RightSpeed = 0;
+void ClearMotorRotations(); // sets the counter to 0
+void Velocity(); // updates the global velocity variables, keep it in a
+                 // thread. it has no end.
+void Speed(float, float, float); // drive at a speed for a time
+void Distance(float, float,
+              float); // drive to a distance per wheel in this time
+void Rotation(float, float,
+              float); // drive to an angle per wheel in this time
+void Accelerate(float, float, float); // interpolate to a speed
+void Brake();                         // turn on the brakes
+void init(int leftport = 0, int rightport = 0, float leftmult = 1,
+          float rightmult = 1) {
+  LeftMotor = leftport;
+  RightMotor = rightport;
+  LMM = leftmult;
+  RMM = rightmult;
+  ClearMotorRotations();
+}
+}; // namespace motors
 
 class newThread {
 public:
-  thread Thread;
+  KIPR::thread Thread;
   newThread(
       void (*func)()) { // create a new thread with a function as a parameter
-    Thread = thread_create(func);
+    Thread = KIPR::thread_create(func);
   }
   void Run();  // start the thread
   void Kill(); // end the thread
-};
-class up {
-public:
-  static bool A(); // is a button not pressed
-  static bool B();
-  static bool C();
-  static bool X();
-  static bool Y();
-  static bool Z();
-};
-class down {
-public:
-  static bool A(); // is a button pressed
-  static bool B();
-  static bool C();
-  static bool X();
-  static bool Y();
-  static bool Z();
-};
-class pressed {
-public:
-  static bool A(); // has a button been clicked
-  static bool B();
-  static bool C();
-  static bool X();
-  static bool Y();
-  static bool Z();
-};
-class buttons {
-public:
-  void Show(bool); // show the buttons on screen?
-  bool Visible();  // are the buttons on screen?
-  pressed Pressed;
-  up Up;
-  down Down;
-};
-class misc {
-private:
-  static void DefStatus(char[]); /*
-   print a huge block of sensor values (if enabled)
-   in: 3 char hex array (fff,000,fa6,etc)
-   00:OXY of the bot (print worldspace)
-   01:Battery level of the bot
-   02:every motor position in ticks
-   03:accelerometer values and average
-   04:gyroscope values and average
-   05:compass angle
-   06:motor multiplier values
-   07:servo positions in tics
-   08:servos enabled?
-   09:digital values
-   10:analog values
-   11:sets debugging on or off
-   */
-public:
-  static void
-  Timer(); // start a clock that updates a global variable. does not end
-  static void HandsOff();               // starts handsoff/shutdownin
-  static void Status(string);           // overload of DefStatus
-  static void Status(char, char, char); // overload of DefStatus
-  static void Start(bool, bool);        // initializes variables
-
-  buttons Buttons;
-};
-
-class pathFind {
-public:
-  static void Face(float, float); // face a certain degree heading in given time
-  static void GoTo(float, float,
-                   float);      // go to an (x,y) coordinate in a given time
-  static void GoTo(P2D, float); // overload
-};
-
-class dgtl {
-public:
-  static bool Value(int); // get the value of a port
-};
-class nlg {
-public:
-  static float Value(int); // get the value of a port as a percent of the max
-  static int Raw(int);     // get the raw value of a port
-};
-class accel {
-public:
-  P3D Value;
-  void Calibrate();  // calibrates the accelerometer
-  float Magnitude(); // gets the magnitude of the vector the accelerometer is
-                     // pointing at
-  float Pitch();     // gets the pitch of the vector
-  float Yaw();       // gets the yaw of the vector
-  void Update();     // update the vector's values. (automatically called on
-                     // mag,pitch,yaw)
-};
-class gyro {
-public:
-  P3D Value;
-  void Calibrate();
-  float Magnitude();
-  float Pitch();
-  float Yaw();
-  void Update();
-};
-class mag {
-public:
-  P3D Value;
-  void Calibrate();
-  float Magnitude();
-  float Pitch();
-  float Yaw();
-  void Update();
-};
-class bttry {
-public:
-  static int Power();     // get the power level from 0-100
-  static bool Critical(); // is the battery less than 33% full?
-};
-class sensors {
-public:
-  sensors(int startlight = 0) { StartLight = startlight; }
-  dgtl Digital;
-  nlg Analog;
-  accel Accel;
-  gyro Gyro;
-  mag Mag;
-  bttry Battery;
-};
-
-class servos {
-public:
-  servos(int armport, int clawport) {
-    ArmServo = armport;
-    ClawServo = clawport;
-  }
-  static void Set(float, float);  // go to a degree angle in a certain time
-  static void Move(float, float); // change the degree angle in a certain time
-  static void Change(float,
-                     float); // go to a degree angle smoothly in a certain time
-};
-
-class motors {
-public:
-  motors(int leftport = 0, int rightport = 0, float leftmult = 1,
-         float rightmult = 1) {
-    LeftMotor = leftport;
-    RightMotor = rightport;
-    LMM = leftmult;
-    RMM = rightmult;
-    ClearMotorRotations();
-  }
-  static void ClearMotorRotations(); // sets the counter to 0
-  static void Velocity(); // updates the global velocity variables, keep it in a
-                          // thread. it has no end.
-  static void Speed(float, float, float); // drive at a speed for a time
-  static void Distance(float, float,
-                       float); // drive to a distance per wheel in this time
-  static void Rotation(float, float,
-                       float); // drive to an angle per wheel in this time
-  static void Accelerate(float, float, float); // interpolate to a speed
-  static void Brake();                         // turn on the brakes
-};
+}; // namespace newThread
 
 float Interpolate(float timePercent, float delta) {
   DLOG return (
@@ -418,9 +364,9 @@ int DTTW(float degrees) { DLOG return degrees * 5.55; }
 
 float TTDW(int ticks) { DLOG return ticks / 5.55; }
 
-float DTIW(float degrees) { DLOG return WheelRadius * Rad(degrees); }
+float DTIW(float degrees) { DLOG return pathFind::WheelRadius * Rad(degrees); }
 
-float ITDW(float inches) { DLOG return Deg(WheelRadius / inches); }
+float ITDW(float inches) { DLOG return Deg(pathFind::WheelRadius / inches); }
 
 float TTIW(int ticks) { DLOG return ticks / 206.49999936; }
 
@@ -436,7 +382,7 @@ float TTDC(int tics) { DLOG return (0.082 * tics) - 60; }
 
 void Wait(float time) {
   DLOG motors::Brake();
-  msleep(time * 1000);
+  KIPR::msleep(time * 1000);
 }
 
 template <typename A, typename B, typename C> bool Clamp(A min, B val, C max) {

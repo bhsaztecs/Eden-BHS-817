@@ -1,33 +1,34 @@
 #pragma once
 #include "basic.h"
-bool dgtl::Value(int port) { return digital(port); }
+namespace sensors {
+bool dgtl::Value(int port) { return KIPR::digital(port); }
 
-float nlg::Value(int port) { return (float)analog(port) / 4095; }
-int nlg::Raw(int port) { return analog(port); }
+float nlg::Value(int port) { return (float)KIPR::analog(port) / 4095; }
+int nlg::Raw(int port) { return KIPR::analog(port); }
 
 void accel::Calibrate() {
-  accel_calibrate();
-  accel::Update();
+  KIPR::accel_calibrate();
+  Update();
 }
 float accel::Magnitude() {
-  accel::Update();
+  Update();
   return Value.Magnitude();
 }
 float accel::Pitch() {
-  accel::Update();
+  Update();
   return Value.Pitch();
 }
 float accel::Yaw() {
-  accel::Update();
+  Update();
   return Value.Yaw();
 }
 void accel::Update() {
-  Value.X = accel_x();
-  Value.Y = accel_y();
-  Value.Z = accel_z();
+  Value.X = KIPR::accel_x();
+  Value.Y = KIPR::accel_y();
+  Value.Z = KIPR::accel_z();
 }
 
-void gyro::Calibrate() { gyro_calibrate(); }
+void gyro::Calibrate() { KIPR::gyro_calibrate(); }
 float gyro::Magnitude() {
   Update();
   return Value.Magnitude();
@@ -41,9 +42,9 @@ float gyro::Yaw() {
   return Value.Yaw();
 }
 void gyro::Update() {
-  Value.X = gyro_x();
-  Value.Y = gyro_y();
-  Value.Z = gyro_z();
+  Value.X = KIPR::gyro_x();
+  Value.Y = KIPR::gyro_y();
+  Value.Z = KIPR::gyro_z();
 }
 
 void mag::Calibrate() {
@@ -62,10 +63,11 @@ float mag::Yaw() {
   return Value.Yaw();
 }
 void mag::Update() {
-  Value.X = magneto_x();
-  Value.Y = magneto_y();
-  Value.Z = magneto_z();
+  Value.X = KIPR::magneto_x();
+  Value.Y = KIPR::magneto_y();
+  Value.Z = KIPR::magneto_z();
 }
 
-int bttry::Power() { return power_level() * 100; }
+int bttry::Power() { return KIPR::power_level() * 100; }
 bool bttry::Critical() { return Power() < 33; }
+} // namespace sensors

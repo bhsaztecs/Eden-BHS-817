@@ -1,5 +1,7 @@
 #pragma once
 #include "basic.h"
+
+namespace pathFind {
 void AthenaDecision(float deltaL, float deltaR) {
   DLOG if (MarginOfError(abs(deltaL), abs(deltaR), AthenaMargin) &&
            (deltaL != deltaR)) {
@@ -13,7 +15,6 @@ void AthenaDecision(float deltaL, float deltaR) {
   DynamicPathfind(deltaL, deltaR);
   return;
 }
-
 void AngularPathfind(float deltaL, float deltaR) {
   DLOG float Wa = (abs(deltaL) + abs(deltaR)) / 2;
   float Ooffset = Wa / TurnRate;
@@ -38,8 +39,7 @@ void DynamicPathfind(float deltaL, float deltaR) {
   Position += prime;
   Position.O += theta;
 }
-
-void pathFind::Face(float deg, float time) {
+void Face(float deg, float time) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
@@ -48,7 +48,7 @@ void pathFind::Face(float deg, float time) {
   motors::Rotation(WheelAngle, -WheelAngle, time);
   Position += temp;
 }
-void pathFind::GoTo(float x, float y, float time) {
+void GoTo(float x, float y, float time) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
@@ -62,7 +62,7 @@ void pathFind::GoTo(float x, float y, float time) {
                    time * delta.Magnitude());
   Position += temp;
 }
-void pathFind::GoTo(P2D goal, float time) {
+void GoTo(P2D goal, float time) {
   DLOG worldSpace temp = Position;
   worldSpace zero;
   Position = zero;
@@ -76,3 +76,4 @@ void pathFind::GoTo(P2D goal, float time) {
                    time * delta.Magnitude());
   Position += temp;
 }
+} // namespace pathFind
