@@ -18,4 +18,4 @@ jobs:
 
       - name: Compile C++ code
         run: |
-          g++ -o output example.cpp
+          $ g++ code/kipr/*.cpp $(ls code/src/*.cpp | grep -v interface.cpp) code/src/interface.cpp example.cpp -o example_program.o
