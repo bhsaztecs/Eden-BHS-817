@@ -1,0 +1,21 @@
+name: C++ Compilation Check
+
+on:
+  pull_request:
+    branches:
+      - main  # Trigger this on PRs to the 'main' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use an Ubuntu VM with g++ preinstalled
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3  # Check out the code from the PR
+
+      - name: Install dependencies (if any)
+        run: sudo apt-get update && sudo apt-get install -y build-essential
+
+      - name: Compile C++ code
+        run: |
+          $ g++ code/kipr/*.cpp $(ls code/src/*.cpp | grep -v interface.cpp) code/src/interface.cpp example.cpp -o example_program.o
