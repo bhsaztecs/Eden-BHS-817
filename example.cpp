@@ -10,7 +10,7 @@ PathFind navigate(tank.m_pass /*what wheels to read from*/);
 
 void Wait(float seconds) {
   tank.Brake();
-  KIPR::msleep(seconds * 1000);
+  msleep(seconds * 1000);
 }
 void update() {
   while (true) { // indefinitely
@@ -22,7 +22,7 @@ void update() {
 int main() {
   if (true /*tournament mode*/) {
     BKND::misc::waitforlight(startlight.m_Port);
-    KIPR::shut_down_in(119);
+    shut_down_in(119);
   }
   BKND::Thread UPDATE(update);
   UPDATE.Run();

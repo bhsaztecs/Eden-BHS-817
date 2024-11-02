@@ -56,7 +56,7 @@ void GoTo(BKND::P2D p_goal, float p_time, pass Vals) {
   Face(delta.Angle(), (p_time * delta.Angle()), Vals);
 
   BKND::motors::Brake(Vals);
-  KIPR::msleep(10);
+  msleep(10);
 
   BKND::motors::Distance(delta.Magnitude(), delta.Magnitude(),
                          p_time * delta.Magnitude(), Vals);
