@@ -3,16 +3,16 @@
 namespace BKND {
 namespace sensors {
 namespace dgtl {
-bool Value(int p_port) { return KIPR::digital(p_port); }
+bool Value(int p_port) { return digital(p_port); }
 } // namespace dgtl
 namespace nlg {
-float Value(int p_port) { return (float)KIPR::analog(p_port) / 4095; }
-int Raw(int p_port) { return KIPR::analog(p_port); }
+float Value(int p_port) { return (float)analog(p_port) / 4095; }
+int Raw(int p_port) { return analog(p_port); }
 } // namespace nlg
 namespace accel {
 BKND::P3D Value;
 void Calibrate() {
-  KIPR::accel_calibrate();
+  accel_calibrate();
   BKND::sensors::accel::Update();
 }
 float Magnitude() {
@@ -28,14 +28,14 @@ float Yaw() {
   return Value.Yaw();
 }
 void Update() {
-  Value.m_X = KIPR::accel_x();
-  Value.m_Y = KIPR::accel_y();
-  Value.m_Z = KIPR::accel_z();
+  Value.m_X = accel_x();
+  Value.m_Y = accel_y();
+  Value.m_Z = accel_z();
 }
 } // namespace accel
 namespace gyro {
 BKND::P3D Value;
-void Calibrate() { KIPR::gyro_calibrate(); }
+void Calibrate() { gyro_calibrate(); }
 float Magnitude() {
   BKND::sensors::gyro::Update();
   return Value.Magnitude();
@@ -49,9 +49,9 @@ float Yaw() {
   return Value.Yaw();
 }
 void Update() {
-  Value.m_X = KIPR::gyro_x();
-  Value.m_Y = KIPR::gyro_y();
-  Value.m_Z = KIPR::gyro_z();
+  Value.m_X = gyro_x();
+  Value.m_Y = gyro_y();
+  Value.m_Z = gyro_z();
 }
 } // namespace gyro
 namespace mag {
@@ -72,13 +72,13 @@ float Yaw() {
   return Value.Yaw();
 }
 void Update() {
-  Value.m_X = KIPR::magneto_x();
-  Value.m_Y = KIPR::magneto_y();
-  Value.m_Z = KIPR::magneto_z();
+  Value.m_X = magneto_x();
+  Value.m_Y = magneto_y();
+  Value.m_Z = magneto_z();
 }
 } // namespace mag
 namespace bttry {
-int Power() { return KIPR::power_level() * 100; }
+int Power() { return power_level() * 100; }
 bool Critical() { return Power() < 33; }
 } // namespace bttry
 } // namespace sensors

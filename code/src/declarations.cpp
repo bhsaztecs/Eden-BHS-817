@@ -168,12 +168,12 @@ float Interpolate(float p_timepercent, float p_delta) {
 
 Thread::Thread(
     void (*p_func)()) { // create a new thread with a function as a parameter
-  m_Thethread = KIPR::thread_create(p_func);
+  thread_create(p_func);
 }
 void Thread::Run() { // start the thread
-  KIPR::thread_start(m_Thethread);
+  thread_start(m_Thethread);
 }
 void Thread::Kill() { // end the thread
-  KIPR::thread_destroy(m_Thethread);
+  thread_destroy(m_Thethread);
 }
 } // namespace BKND

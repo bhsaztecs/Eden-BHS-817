@@ -1,10 +1,11 @@
 #pragma once
 #include "declarations.h"
 class Motors {
+  void NormalizeMultipliers(float p_lcompensator, float p_rcompensator);
+
 public:
   BKND::pass m_pass;
   float m_LeftSpeed, m_RightSpeed;
-  void NormalizeMultipliers(float p_lcompensator, float p_rcompensator);
 
   Motors(int p_leftport, int p_rightport, float p_lcompensator,
          float p_rcompensator, float margin, float turnrate);
@@ -21,8 +22,6 @@ public:
   void Brake();
 };
 class Servos {
-  float lerp(float p_a, float p_b, float p_t);
-
 public:
   int m_Port;
   BKND::P2D m_Minimum, m_Maximum;

@@ -16,12 +16,8 @@ void Motors::NormalizeMultipliers(float p_lcompensator, float p_rcompensator) {
 
 Motors::Motors(int p_leftport, int p_rightport, float p_lcompensator,
                float p_rcompensator, float margin, float turnrate)
-    : m_pass(p_leftport, p_rightport,        // leftmotor, rightmotor
-             p_lcompensator, p_rcompensator, // lmm, rmm
-             1.0f,                           // tmm (time multiplier)
-             margin, turnrate,               // margin, turnrate
-             m_LeftSpeed, m_RightSpeed)      // references to speed variables
-{
+    : m_pass(p_leftport, p_rightport, p_lcompensator, p_rcompensator, 1.0f,
+             margin, turnrate, m_LeftSpeed, m_RightSpeed) {
   NormalizeMultipliers(p_lcompensator, p_rcompensator);
   Clear();
 }
@@ -49,17 +45,13 @@ void Motors::Accelerate(float p_leftgoalpercent, float p_rightgoalpercent,
 }
 void Motors::Brake() { BKND::motors::Brake(m_pass); }
 
-float Servos::lerp(float p_a, float p_b, float p_t) {
-  return p_a + (p_b - p_a) * p_t;
-}
-
 Servos::Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max) {}
 void Servos::Set(float p_angle) { BKND::servos::Set(m_Port, p_angle); }
 void Servos::Change(float p_angle) { BKND::servos::Change(m_Port, p_angle); }
 void Servos::GoTo(float p_angle, float p_time) {
   BKND::servos::Move(m_Port, p_angle, p_time);
 }
-float Servos::Angle() { return BKND::TTDA(KIPR::get_servo_position(m_Port)); }
+float Servos::Angle() { return BKND::TTDA(get_servo_position(m_Port)); }
 
 Sensors<BKND::sensors::type::Analog>::Sensors(int p_port) : m_Port(p_port) {}
 float Sensors<BKND::sensors::type::Analog>::Value() {

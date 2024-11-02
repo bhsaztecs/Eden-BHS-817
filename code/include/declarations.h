@@ -1,5 +1,5 @@
 #pragma once
-#include "../kipr/wombat.h"
+#include "../../../libwallaby/kipr.h"
 #include <chrono>
 #include <cmath>
 #include <iostream>
@@ -14,9 +14,9 @@ class P2D;        // 2 dimensional coordinate
 class P3D;        // 3 dimensional coordinate
 class worldSpace; // 2 dimensional coordinate with additional functionality
 struct pass {
-  int leftmotor;
+  int leftmotor; // left motor port
   int rightmotor;
-  float lmm;
+  float lmm; // left motor multiplier
   float rmm;
   float tmm;
   float margin;
@@ -219,7 +219,7 @@ public:
 float Interpolate(float p_timepercent, float p_delta);
 class Thread {
 public:
-  KIPR::thread m_Thethread;
+  thread m_Thethread;
   Thread(void (*p_func)());
   void Run();  // start the thread
   void Kill(); // end the thread
