@@ -1,4 +1,6 @@
 Eden is an abstraction library that interfaces with KIPR's wombat.
+See https://github.com/kipr/libwallaby
+
 Eden is licensed under GNU AGPL.
 to compile: use
 ```bash
