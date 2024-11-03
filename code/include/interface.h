@@ -57,7 +57,7 @@ public:
 class PathFind {
 public:
   BKND::pass m_Read;
-  PathFind(BKND::pass motorstoread);
+  PathFind(BKND::pass &motorstoread);
   void GoTo(BKND::P2D p_goal, float p_time);
   void Face(float p_goal, float p_time);
 };

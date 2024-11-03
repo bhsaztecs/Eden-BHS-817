@@ -63,7 +63,7 @@ bool Sensors<BKND::sensors::type::Digital>::Value() {
   return BKND::sensors::dgtl::Value(m_Port);
 }
 
-PathFind::PathFind(BKND::pass motorstoread) : m_Read(motorstoread) {}
+PathFind::PathFind(BKND::pass &motorstoread) : m_Read(motorstoread) {}
 void PathFind::GoTo(BKND::P2D p_goal, float p_time) {
   BKND::pathFind::GoTo(p_goal, p_time, m_Read);
 }
