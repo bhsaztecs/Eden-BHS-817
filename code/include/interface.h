@@ -1,14 +1,14 @@
 #pragma once
 #include "declarations.h"
 class Motors {
-  void NormalizeMultipliers(float p_lcompensator, float p_rcompensator);
+  void NormalizeMultipliers(float p_leftmultiplier, float p_rightmultiplier);
 
 public:
   BKND::pass m_pass;
   float m_LeftSpeed, m_RightSpeed;
 
-  Motors(int p_leftport, int p_rightport, float p_lcompensator,
-         float p_rcompensator, float margin, float turnrate);
+  Motors(int p_leftport, int p_rightport, float p_leftmultiplier,
+         float p_rightmultiplier, float p_athenamargin, float p_turnrate);
   void Clear();
   void Velocity();
   void Speed(float p_leftgoalpercent, float p_rightgoalpercent,
@@ -57,7 +57,7 @@ public:
 class PathFind {
 public:
   BKND::pass m_Read;
-  PathFind(BKND::pass &motorstoread);
+  PathFind(BKND::pass &p_motorstoread);
   void GoTo(BKND::P2D p_goal, float p_time);
   void Face(float p_goal, float p_time);
 };

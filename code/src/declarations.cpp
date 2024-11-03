@@ -53,9 +53,9 @@ int DTTC(float p_degrees) { return (12.05 * p_degrees) + 723.5; }
 
 float TTDC(int p_tics) { return (0.082 * p_tics) - 60; }
 
-P2D::P2D(float x, float y) {
-  this->m_X = x;
-  this->m_Y = y;
+P2D::P2D(float p_x, float p_y) {
+  this->m_X = p_x;
+  this->m_Y = p_y;
 }
 float P2D::Magnitude() {
   return std::sqrt(std::pow(m_X, 2) + std::pow(m_Y, 2));
@@ -127,12 +127,12 @@ void P3D::operator-=(const P3D &p_other) {
   this->m_Z = temp.m_Z;
 }
 
-worldSpace::worldSpace(float p_x, float p_y, float p_r, float p_o) {
-  this->m_O = p_o;
+worldSpace::worldSpace(float p_x, float p_y, float p_r, float p_orientation) {
+  this->m_Orientation = p_orientation;
   this->m_X = p_x;
   this->m_Y = p_y;
   this->m_Radius = p_r;
-  Obstacles.push_back(this);
+  G_Obstacles.push_back(this);
 }
 
 bool worldSpace::operator==(const worldSpace &p_other) {
@@ -159,11 +159,10 @@ void worldSpace::operator-=(const P2D &p_other) {
 }
 worldSpace worldSpace::operator=(const worldSpace &p_other) { return p_other; }
 
-float Interpolate(float p_timepercent, float p_delta) {
-  return (std::pow(p_timepercent, 2.16) /
-          (std::pow(p_timepercent, 2.16) +
-           (std::pow((1 - p_timepercent), 2.16)))) *
-         p_delta;
+float Interpolate(float p_timepercent) {
+  return (
+      std::pow(p_timepercent, 2.16) /
+      (std::pow(p_timepercent, 2.16) + (std::pow((1 - p_timepercent), 2.16))));
 }
 
 Thread::Thread(

@@ -36,11 +36,11 @@ void Show(bool p_vis) {
 bool Visible() { return get_extra_buttons_visible(); }
 } // namespace buttons
 void waitforlight(int p_port) {
-  int on, off;
+  int onvalue, offvalue;
   std::cout << "Running";
   while (!any_button()) {
-    on = analog(p_port);
-    std::cout << "ON: " << on << std::endl;
+    onvalue = analog(p_port);
+    std::cout << "ON: " << onvalue << std::endl;
     console_clear();
     msleep(25);
     if (any_button()) {
@@ -50,8 +50,8 @@ void waitforlight(int p_port) {
   }
   msleep(500);
   while (!any_button()) {
-    off = analog(p_port);
-    std::cout << "OFF: " << off << std::endl;
+    offvalue = analog(p_port);
+    std::cout << "OFF: " << offvalue << std::endl;
     console_clear();
     msleep(25);
     if (any_button()) {
@@ -60,10 +60,10 @@ void waitforlight(int p_port) {
     msleep(25);
   }
   msleep(500);
-  int thresh = (off - on) * 0.1 + on;
-  std::cout << "thresh: " << thresh << std::endl;
+  int minimumtorun = (offvalue - onvalue) * 0.1 + onvalue;
+  std::cout << "thresh: " << minimumtorun << std::endl;
 
-  for (int i = 0; analog(p_port) > thresh; i++) {
+  for (int i = 0; analog(p_port) > minimumtorun; i++) {
     std::cout << "Waiting";
     if (i % 4 == 0) {
       std::cout << std::endl;
@@ -81,7 +81,7 @@ void waitforlight(int p_port) {
 void Timer() {
   while (1) {
     msleep(1);
-    BKND::CurrentMS++;
+    BKND::G_CurrentMS++;
   }
 }
 } // namespace misc

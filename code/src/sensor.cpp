@@ -6,7 +6,7 @@ namespace dgtl {
 bool Value(int p_port) { return digital(p_port); }
 } // namespace dgtl
 namespace nlg {
-float Value(int p_port) { return (float)analog(p_port) / 4095; }
+float Value(int p_port) { return (float)analog(p_port) / 4095.0; }
 int Raw(int p_port) { return analog(p_port); }
 } // namespace nlg
 namespace accel {

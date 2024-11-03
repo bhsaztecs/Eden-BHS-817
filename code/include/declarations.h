@@ -23,26 +23,28 @@ struct pass {
   float turnrate;
   float &leftspeed;
   float &rightspeed;
-  pass(int lm, int rm, float l, float r, float t, float m, float tr, float &ls,
-       float &rs)
-      : leftmotor(lm), rightmotor(rm), lmm(l), rmm(r), tmm(t), margin(m),
-        turnrate(tr), leftspeed(ls), rightspeed(rs) {}
+  pass(int p_leftmotorport, int p_rightmotorport, float p_leftmultiplier,
+       float p_rightmultiplier, float p_timemultiplier, float p_athenamargin,
+       float p_turnrate, float &p_leftspeed, float &p_rightspeed)
+      : leftmotor(p_leftmotorport), rightmotor(p_rightmotorport),
+        lmm(p_leftmultiplier), rmm(p_rightmultiplier), tmm(p_timemultiplier),
+        margin(p_athenamargin), turnrate(p_turnrate), leftspeed(p_leftspeed),
+        rightspeed(p_rightspeed) {}
 };
-float Deg(float);  /*Convert Radians to Degrees*/
-float Rad(float);  /*Convert Degrees to Radians*/
-float ITDW(float); /*Convert inches to degrees (for the wheel)*/
-float DTIW(float); /*convert degrees to inches (for the wheel)*/
-int DTTA(float);   /*convert degrees to ticks (for the arm servo)*/
-int DTTC(float);   /*convert degrees to ticks (for the claw servo)*/
-int DTTW(float);   /*convert degrees to ticks (for the wheel)*/
-int ITTW(float);   /*convert inches to ticks (for the wheel)*/
-float TTDA(int);   /*convert ticks to degrees (for the arm servo)*/
-float TTDC(int);   /*convert ticks to degrees (for the claw servo)*/
-float TTDW(int);   /*convert ticks to degrees (for the wheel)*/
-float TTIW(int);   /*convert ticks to inches (for the wheel)*/
-float Interpolate(float,
-                  float); /*get a smooth transition from point a to point b*/
-/* IN {-> Time (from 1 to 0), Delta (from 0 to this number)
+float Deg(float);         /*Convert Radians to Degrees*/
+float Rad(float);         /*Convert Degrees to Radians*/
+float ITDW(float);        /*Convert inches to degrees (for the wheel)*/
+float DTIW(float);        /*convert degrees to inches (for the wheel)*/
+int DTTA(float);          /*convert degrees to ticks (for the arm servo)*/
+int DTTC(float);          /*convert degrees to ticks (for the claw servo)*/
+int DTTW(float);          /*convert degrees to ticks (for the wheel)*/
+int ITTW(float);          /*convert inches to ticks (for the wheel)*/
+float TTDA(int);          /*convert ticks to degrees (for the arm servo)*/
+float TTDC(int);          /*convert ticks to degrees (for the claw servo)*/
+float TTDW(int);          /*convert ticks to degrees (for the wheel)*/
+float TTIW(int);          /*convert ticks to inches (for the wheel)*/
+float Interpolate(float); /*get a smooth transition from 0 to 1*/
+/* IN {-> Time (from 1 to 0)
  * OUT{-> value returned from the equation.
  */
 template <typename A, typename B, typename C>
@@ -159,14 +161,14 @@ void ClearMotorRotations(pass); // sets the counter to 0
 void Velocity(pass); // updates the global velocity variables, keep it in a
                      // thread. it has no end.
 void Speed(float p_leftpercent, float p_rightpercent, float p_timeinseconds,
-           pass Vals); // drive at a speed for a time
+           pass p_vals); // drive at a speed for a time
 void Distance(float p_leftinches, float p_rightinches, float p_timeinseconds,
-              pass Vals); // drive to a distance per wheel in this time
+              pass p_vals); // drive to a distance per wheel in this time
 void Rotation(float p_leftdegrees, float p_rightdegrees, float p_timeinseconds,
-              pass Vals); // drive to an angle per wheel in this time
+              pass p_vals); // drive to an angle per wheel in this time
 void Accelerate(float p_leftmaxpercent, float p_rightmaxpercent,
-                float p_timeinseconds, pass Vals); // interpolate to a speed
-void Brake(pass Vals);                             // turn on the brakes
+                float p_timeinseconds, pass p_vals); // interpolate to a speed
+void Brake(pass p_vals);                             // turn on the brakes
 }; // namespace motors
 
 class P2D {
@@ -202,7 +204,7 @@ public:
 };
 class worldSpace : public P2D {
 public:
-  float m_O;
+  float m_Orientation;
   float m_Radius;
 
   worldSpace(float p_x = 0, float p_y = 0, float p_r = 0, float p_o = 0);
@@ -216,7 +218,7 @@ public:
   worldSpace operator=(const worldSpace &p_other);
 }; // namespace worldSpace:public P2D
 
-float Interpolate(float p_timepercent, float p_delta);
+float Interpolate(float p_timepercent);
 class Thread {
 public:
   thread m_Thethread;
@@ -225,8 +227,8 @@ public:
   void Kill(); // end the thread
 }; // namespace newThread
 
-inline long int CurrentMS;
-inline std::vector<worldSpace *> Obstacles;
-inline worldSpace Position(0, 0, 0, 0);
+inline long int G_CurrentMS;
+inline std::vector<worldSpace *> G_Obstacles;
+inline worldSpace G_Position(0, 0, 0, 0);
 
 } // namespace BKND
