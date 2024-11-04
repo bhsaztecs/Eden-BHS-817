@@ -3,7 +3,7 @@
 namespace BKND {
 namespace sensors {
 namespace dgtl {
-bool Value(int p_port) { return digital(p_port); }
+bool Value(int p_port) { return digital(p_port) != 0; }
 } // namespace dgtl
 namespace nlg {
 float Value(int p_port) { return (float)analog(p_port) / 4095.0; }

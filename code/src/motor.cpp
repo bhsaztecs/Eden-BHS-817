@@ -6,7 +6,7 @@ void ClearMotorRotations(pass p_vals) {
   cmpc(p_vals.rightmotor);
 }
 void Velocity(pass p_vals) {
-  while (1) {
+  while (true) {
     float leftposition1 = gmpc(p_vals.leftmotor);
     float rightposition1 = gmpc(p_vals.rightmotor);
     msleep(100);

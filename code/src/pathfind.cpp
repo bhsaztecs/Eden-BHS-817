@@ -12,7 +12,6 @@ void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
     return;
   }
   BKND::pathFind::DynamicPathfind(p_deltal, p_deltar);
-  return;
 }
 void AngularPathfind(float p_deltal, float p_deltar, pass p_vals) {
   float wheelangle = (fabs(p_deltal) + fabs(p_deltar)) / 2;

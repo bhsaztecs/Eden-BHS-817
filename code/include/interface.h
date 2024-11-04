@@ -9,27 +9,27 @@ public:
 
   Motors(int p_leftport, int p_rightport, float p_leftmultiplier,
          float p_rightmultiplier, float p_athenamargin, float p_turnrate);
-  void Clear();
-  void Velocity();
+  void Clear() const;
+  void Velocity() const;
   void Speed(float p_leftgoalpercent, float p_rightgoalpercent,
-             float p_timeinseconds);
+             float p_timeinseconds) const;
   void Rotation(float p_leftgoaldegrees, float p_rightgoaldegrees,
-                float p_timeinseconds);
+                float p_timeinseconds) const;
   void Distance(float p_leftgoalinches, float p_rightgoalinches,
-                float p_timeinseconds);
+                float p_timeinseconds) const;
   void Accelerate(float p_leftgoalpercent, float p_rightgoalpercent,
-                  float p_timeinseconds);
-  void Brake();
+                  float p_timeinseconds) const;
+  void Brake() const;
 };
 class Servos {
 public:
   int m_Port;
   BKND::P2D m_Minimum, m_Maximum;
   Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max);
-  void Set(float p_angle);
-  void Change(float p_angle);
-  void GoTo(float p_angle, float p_time);
-  float Angle();
+  void Set(float p_angle) const;
+  void Change(float p_angle) const;
+  void GoTo(float p_angle, float p_time) const;
+  float Angle() const;
 };
 
 template <BKND::sensors::type> class Sensors {
@@ -44,20 +44,20 @@ public:
   int m_Port;
 
   Sensors(int p_port);
-  float Value();
+  float Value() const;
 };
 template <> class Sensors<BKND::sensors::type::Digital> {
 public:
   int m_Port;
 
   Sensors(int p_port);
-  bool Value();
+  bool Value() const;
 };
 
 class PathFind {
 public:
   BKND::pass m_Read;
   PathFind(BKND::pass &p_motorstoread);
-  void GoTo(BKND::P2D p_goal, float p_time);
-  void Face(float p_goal, float p_time);
+  void GoTo(BKND::P2D p_goal, float p_time) const;
+  void Face(float p_goal, float p_time) const;
 };

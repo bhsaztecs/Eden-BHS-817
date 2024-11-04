@@ -1,7 +1,8 @@
 #include "../include/declarations.h"
 namespace BKND {
 string PrettyTime(int p_ms) {
-  int min, sec;
+  int min;
+  int sec;
   int totalms = p_ms;
   min = totalms / (60 * 1000);
   totalms %= 60 * 1000;
@@ -9,7 +10,7 @@ string PrettyTime(int p_ms) {
   totalms %= 1000;
 
   // Convert totalms to float and then to string to handle decimals
-  std::string msStr = std::to_string(totalms / 1000.0f);
+  std::string msStr = std::to_string(totalms / 1000.0F);
 
   // Remove trailing zeros
   size_t found = msStr.find_last_not_of('0');
@@ -57,21 +58,21 @@ P2D::P2D(float p_x, float p_y) {
   this->m_X = p_x;
   this->m_Y = p_y;
 }
-float P2D::Magnitude() {
+float P2D::Magnitude() const {
   return std::sqrt(std::pow(m_X, 2) + std::pow(m_Y, 2));
 }
-float P2D::Angle() { return Deg(std::atan2(m_Y, m_X)); }
-P2D P2D::operator-(const P2D &p_other) {
+float P2D::Angle() const { return Deg(std::atan2(m_Y, m_X)); }
+P2D P2D::operator-(const P2D &p_other) const {
   return P2D(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y);
 }
-P2D P2D::operator+(const P2D &p_other) {
+P2D P2D::operator+(const P2D &p_other) const {
   return P2D(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y);
 }
 void P2D::operator=(const P2D &p_other) {
   this->m_X = p_other.m_X;
   this->m_Y = p_other.m_Y;
 }
-bool P2D::operator==(const P2D &p_other) {
+bool P2D::operator==(const P2D &p_other) const {
   return (this->m_X == p_other.m_X) && (this->m_Y == p_other.m_Y);
 }
 void P2D::operator+=(const P2D &p_other) {
@@ -90,16 +91,16 @@ P3D::P3D(float p_x, float p_y, float p_z) {
   this->m_Y = p_y;
   this->m_Z = p_z;
 }
-float P3D::Magnitude() {
+float P3D::Magnitude() const {
   return std::sqrt(std::pow(m_X, 2) + std::pow(m_Y, 2) + std::pow(m_Z, 2));
 }
-float P3D::Pitch() { return Deg(std::atan(m_Y / m_Z)); }
-float P3D::Yaw() { return Deg(std::atan(m_X / m_Z)); }
-P3D P3D::operator-(const P3D &p_other) {
+float P3D::Pitch() const { return Deg(std::atan(m_Y / m_Z)); }
+float P3D::Yaw() const { return Deg(std::atan(m_X / m_Z)); }
+P3D P3D::operator-(const P3D &p_other) const {
   return P3D(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y,
              this->m_Z - p_other.m_Z);
 }
-P3D P3D::operator+(const P3D &p_other) {
+P3D P3D::operator+(const P3D &p_other) const {
   return P3D(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y,
              this->m_Z + p_other.m_Z);
 }
@@ -108,7 +109,7 @@ void P3D::operator=(const P3D &p_other) {
   this->m_Y = p_other.m_Y;
   this->m_Z = p_other.m_Z;
 }
-bool P3D::operator==(const P3D &p_other) {
+bool P3D::operator==(const P3D &p_other) const {
   return (this->m_X == p_other.m_X) && (this->m_Y == p_other.m_Y) &&
          (this->m_Z == p_other.m_Z);
 }
@@ -160,6 +161,7 @@ void worldSpace::operator-=(const P2D &p_other) {
 worldSpace worldSpace::operator=(const worldSpace &p_other) { return p_other; }
 
 float Interpolate(float p_timepercent) {
+  /*2.16 for maximum smoothness*/
   return (
       std::pow(p_timepercent, 2.16) /
       (std::pow(p_timepercent, 2.16) + (std::pow((1 - p_timepercent), 2.16))));
@@ -169,10 +171,10 @@ Thread::Thread(
     void (*p_func)()) { // create a new thread with a function as a parameter
   thread_create(p_func);
 }
-void Thread::Run() { // start the thread
+void Thread::Run() const { // start the thread
   thread_start(m_Thethread);
 }
-void Thread::Kill() { // end the thread
+void Thread::Kill() const { // end the thread
   thread_destroy(m_Thethread);
 }
 } // namespace BKND

@@ -176,12 +176,12 @@ public:
   float m_X;
   float m_Y;
   P2D(float x = 0, float y = 0);
-  float Magnitude();
-  float Angle();
-  P2D operator-(const P2D &p_other);
-  P2D operator+(const P2D &p_other);
+  float Magnitude() const;
+  float Angle() const;
+  P2D operator-(const P2D &p_other) const;
+  P2D operator+(const P2D &p_other) const;
   void operator=(const P2D &p_other);
-  bool operator==(const P2D &p_other);
+  bool operator==(const P2D &p_other) const;
   void operator+=(const P2D &p_other);
   void operator-=(const P2D &p_other);
 };
@@ -192,13 +192,13 @@ public:
   float m_Y;
   float m_Z;
   P3D(float p_x = 0, float p_y = 0, float p_z = 0);
-  float Magnitude();
-  float Pitch();
-  float Yaw();
-  P3D operator-(const P3D &p_other);
-  P3D operator+(const P3D &p_other);
+  float Magnitude() const;
+  float Pitch() const;
+  float Yaw() const;
+  P3D operator-(const P3D &p_other) const;
+  P3D operator+(const P3D &p_other) const;
   void operator=(const P3D &p_other);
-  bool operator==(const P3D &p_other);
+  bool operator==(const P3D &p_other) const;
   void operator+=(const P3D &p_other);
   void operator-=(const P3D &p_other);
 };
@@ -223,8 +223,8 @@ class Thread {
 public:
   thread m_Thethread;
   Thread(void (*p_func)());
-  void Run();  // start the thread
-  void Kill(); // end the thread
+  void Run() const;  // start the thread
+  void Kill() const; // end the thread
 }; // namespace newThread
 
 inline long int G_CurrentMS;

@@ -3,28 +3,28 @@ namespace BKND {
 namespace misc {
 namespace buttons {
 namespace down {
-bool A() { return a_button(); }
-bool B() { return b_button(); }
-bool C() { return c_button(); }
-bool X() { return x_button(); }
-bool Y() { return y_button(); }
-bool Z() { return z_button(); }
+bool A() { return a_button() != 0; }
+bool B() { return b_button() != 0; }
+bool C() { return c_button() != 0; }
+bool X() { return x_button() != 0; }
+bool Y() { return y_button() != 0; }
+bool Z() { return z_button() != 0; }
 } // namespace down
 namespace up {
-bool A() { return !a_button(); }
-bool B() { return !b_button(); }
-bool C() { return !c_button(); }
-bool X() { return !x_button(); }
-bool Y() { return !y_button(); }
-bool Z() { return !z_button(); }
+bool A() { return a_button() == 0; }
+bool B() { return b_button() == 0; }
+bool C() { return c_button() == 0; }
+bool X() { return x_button() == 0; }
+bool Y() { return y_button() == 0; }
+bool Z() { return z_button() == 0; }
 } // namespace up
 namespace pressed {
-bool A() { return a_button_clicked(); }
-bool B() { return b_button_clicked(); }
-bool C() { return c_button_clicked(); }
-bool X() { return x_button_clicked(); }
-bool Y() { return y_button_clicked(); }
-bool Z() { return z_button_clicked(); }
+bool A() { return a_button_clicked() != 0; }
+bool B() { return b_button_clicked() != 0; }
+bool C() { return c_button_clicked() != 0; }
+bool X() { return x_button_clicked() != 0; }
+bool Y() { return y_button_clicked() != 0; }
+bool Z() { return z_button_clicked() != 0; }
 } // namespace pressed
 void Show(bool p_vis) {
   if (p_vis) {
@@ -33,28 +33,29 @@ void Show(bool p_vis) {
   }
   extra_buttons_hide();
 }
-bool Visible() { return get_extra_buttons_visible(); }
+bool Visible() { return get_extra_buttons_visible() != 0; }
 } // namespace buttons
 void waitforlight(int p_port) {
-  int onvalue, offvalue;
+  int onvalue;
+  int offvalue;
   std::cout << "Running";
-  while (!any_button()) {
+  while (any_button() == 0) {
     onvalue = analog(p_port);
     std::cout << "ON: " << onvalue << std::endl;
     console_clear();
     msleep(25);
-    if (any_button()) {
+    if (any_button() != 0) {
       break;
     }
     msleep(25);
   }
   msleep(500);
-  while (!any_button()) {
+  while (any_button() == 0) {
     offvalue = analog(p_port);
     std::cout << "OFF: " << offvalue << std::endl;
     console_clear();
     msleep(25);
-    if (any_button()) {
+    if (any_button() != 0) {
       break;
     }
     msleep(25);
@@ -79,7 +80,7 @@ void waitforlight(int p_port) {
   }
 }
 void Timer() {
-  while (1) {
+  while (true) {
     msleep(1);
     BKND::G_CurrentMS++;
   }
