@@ -169,12 +169,12 @@ float Interpolate(float p_timepercent) {
 
 Thread::Thread(
     void (*p_func)()) { // create a new thread with a function as a parameter
-  thread_create(p_func);
+  DBUG thread_create(p_func);
 }
 void Thread::Run() const { // start the thread
-  thread_start(m_Thethread);
+  DBUG thread_start(m_Thethread);
 }
 void Thread::Kill() const { // end the thread
-  thread_destroy(m_Thethread);
+  DBUG thread_destroy(m_Thethread);
 }
 } // namespace BKND

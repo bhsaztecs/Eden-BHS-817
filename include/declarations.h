@@ -230,5 +230,10 @@ public:
 inline long int G_CurrentMS;
 inline std::vector<worldSpace *> G_Obstacles;
 inline worldSpace G_Position(0, 0, 0, 0);
-
+#define DBUG                                                                   \
+  std::cout << __PRETTY_FUNCTION__ << " called at "                            \
+            << BKND::PrettyTime(BKND::G_CurrentMS) << std::endl;
+#define BPOINT                                                                 \
+  DBUG string temp;                                                            \
+  std::cin >> temp;
 } // namespace BKND

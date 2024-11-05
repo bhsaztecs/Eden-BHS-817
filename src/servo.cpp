@@ -2,16 +2,16 @@
 namespace BKND {
 namespace servos {
 void Set(int p_port, float p_angle) {
-  set_servo_position(p_port, BKND::DTTA(p_angle));
+  DBUG set_servo_position(p_port, BKND::DTTA(p_angle));
 }
 void Change(int p_port, float p_changeinangle) {
-  int currentangle = BKND::TTDA(get_servo_position(p_port));
+  DBUG int currentangle = BKND::TTDA(get_servo_position(p_port));
   int newangle = currentangle + p_changeinangle;
 
   Set(p_port, newangle);
 }
 void Move(int p_port, float p_angle, float p_timeinseconds) {
-  int currentangle = get_servo_position(p_port);
+  DBUG int currentangle = get_servo_position(p_port);
   p_angle = BKND::DTTA(p_angle);
   int iterator = p_angle - currentangle;
   if (iterator > 0) {

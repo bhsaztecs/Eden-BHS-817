@@ -1,4 +1,4 @@
-#include "../include/interface.h"
+#include "include/interface.h"
 Motors tank(0 /*left port*/, 3 /*right port*/, 1.0 /*left motor multiplier*/,
             1.0 /*right motor multiplier*/, 5 /*margin*/, 2.8 /*turnrate*/);
 Servos arm(0 /*port*/, BKND::P2D(-45 /*degrees*/, 125 /*tics*/) /*minimum*/,

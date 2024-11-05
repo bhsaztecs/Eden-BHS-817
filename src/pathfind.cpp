@@ -2,8 +2,8 @@
 namespace BKND {
 namespace pathFind {
 void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
-  if (BKND::MarginOfError(fabs(p_deltal), fabs(p_deltar), p_vals.margin) &&
-      (p_deltal != p_deltar)) {
+  DBUG if (BKND::MarginOfError(fabs(p_deltal), fabs(p_deltar), p_vals.margin) &&
+           (p_deltal != p_deltar)) {
     BKND::pathFind::AngularPathfind(p_deltal, p_deltar, p_vals);
     return;
   }
@@ -14,14 +14,14 @@ void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
   BKND::pathFind::DynamicPathfind(p_deltal, p_deltar);
 }
 void AngularPathfind(float p_deltal, float p_deltar, pass p_vals) {
-  float wheelangle = (fabs(p_deltal) + fabs(p_deltar)) / 2;
+  DBUG float wheelangle = (fabs(p_deltal) + fabs(p_deltar)) / 2;
   float orientationoffset = wheelangle / p_vals.turnrate;
 
   BKND::G_Position.m_Orientation += orientationoffset;
 }
 
 void LinearPathfind(float p_deltal, float p_deltar) {
-  float distance = BKND::DTIW((p_deltal + p_deltar) / 2);
+  DBUG float distance = BKND::DTIW((p_deltal + p_deltar) / 2);
   BKND::P2D delta(distance * cos(BKND::G_Position.m_Orientation),
                   distance * sin(BKND::G_Position.m_Orientation));
 
@@ -30,7 +30,7 @@ void LinearPathfind(float p_deltal, float p_deltar) {
 }
 
 void DynamicPathfind(float p_deltal, float p_deltar) {
-  float curvature = (p_deltal + p_deltar) / (p_deltal - p_deltar);
+  DBUG float curvature = (p_deltal + p_deltar) / (p_deltal - p_deltar);
   float distancetraveled = (p_deltal + p_deltar) / 2;
   float theta = distancetraveled / fabs(curvature);
   BKND::P2D changeinposition(fabs(curvature) * cos(theta),
@@ -40,7 +40,7 @@ void DynamicPathfind(float p_deltal, float p_deltar) {
   BKND::G_Position.m_Orientation += theta;
 }
 void Face(float p_deg, float p_time, pass p_vals) {
-  BKND::worldSpace originalposition = BKND::G_Position;
+  DBUG BKND::worldSpace originalposition = BKND::G_Position;
   BKND::worldSpace origin;
   BKND::G_Position = origin;
   float deltaorientation = BKND::Rad(p_deg) - BKND::G_Position.m_Orientation;
@@ -49,7 +49,7 @@ void Face(float p_deg, float p_time, pass p_vals) {
   BKND::G_Position += originalposition;
 }
 void GoTo(BKND::P2D p_goal, float p_time, pass p_vals) {
-  BKND::worldSpace originalposition = BKND::G_Position;
+  DBUG BKND::worldSpace originalposition = BKND::G_Position;
   BKND::worldSpace origin;
   BKND::G_Position = origin;
   BKND::P2D deltaposition(p_goal - BKND::G_Position);
