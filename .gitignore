@@ -1,6 +1,35 @@
 # Ignore everything inside /code/kipr but not other content in /code
-/code/kipr/
+/bin
 
-# Ignore binaries (for Linux and macOS)
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
 *.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
 *.exe
+*.out
+*.app
