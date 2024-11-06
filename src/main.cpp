@@ -24,13 +24,9 @@ int main() {
     BKND::misc::waitforlight(startlight.m_Port);
     shut_down_in(119);
   }
-  std::cout << "abt to thread" << std::endl;
   BKND::Thread UPDATE([]() { BKND::motors::Velocity(tank.m_pass); });
-  std::cout << "thread made" << std::endl;
   UPDATE.Run();
-  std::cout << "thread ran" << std::endl;
   Wait(1);
-  std::cout << "started thread" << std::endl;
   tank.Accelerate(100 /*left goal*/, 100 /*right goal*/,
                   5 /*tics per second per second*/);
   tank.Accelerate(0, 0, 5);
