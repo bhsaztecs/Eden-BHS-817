@@ -22,7 +22,7 @@ void Velocity(pass p_vals) {
 }
 void Speed(float p_leftpercent, float p_rightpercent, float p_timeinseconds,
            pass p_vals) {
-  DBUG float leftposition1 = BKND::TTIW(gmpc(p_vals.leftmotor));
+  float leftposition1 = BKND::TTIW(gmpc(p_vals.leftmotor));
   float rightposition1 = BKND::TTIW(gmpc(p_vals.rightmotor));
   motor(p_vals.leftmotor, (p_leftpercent * p_vals.lmm));
   motor(p_vals.rightmotor, (p_rightpercent * p_vals.rmm));

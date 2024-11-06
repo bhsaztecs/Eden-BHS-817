@@ -2,8 +2,8 @@
 namespace BKND {
 namespace pathFind {
 void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
-  DBUG if (BKND::MarginOfError(fabs(p_deltal), fabs(p_deltar), p_vals.margin) &&
-           (p_deltal != p_deltar)) {
+  if (BKND::MarginOfError(fabs(p_deltal), fabs(p_deltar), p_vals.margin) &&
+      (p_deltal != p_deltar)) {
     BKND::pathFind::AngularPathfind(p_deltal, p_deltar, p_vals);
     return;
   }
@@ -14,14 +14,14 @@ void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
   BKND::pathFind::DynamicPathfind(p_deltal, p_deltar);
 }
 void AngularPathfind(float p_deltal, float p_deltar, pass p_vals) {
-  DBUG float wheelangle = (fabs(p_deltal) + fabs(p_deltar)) / 2;
+  float wheelangle = (fabs(p_deltal) + fabs(p_deltar)) / 2;
   float orientationoffset = wheelangle / p_vals.turnrate;
 
   BKND::G_Position.m_Orientation += orientationoffset;
 }
 
 void LinearPathfind(float p_deltal, float p_deltar) {
-  DBUG float distance = BKND::DTIW((p_deltal + p_deltar) / 2);
+  float distance = BKND::DTIW((p_deltal + p_deltar) / 2);
   BKND::P2D delta(distance * cos(BKND::G_Position.m_Orientation),
                   distance * sin(BKND::G_Position.m_Orientation));
 
@@ -30,7 +30,7 @@ void LinearPathfind(float p_deltal, float p_deltar) {
 }
 
 void DynamicPathfind(float p_deltal, float p_deltar) {
-  DBUG float curvature = (p_deltal + p_deltar) / (p_deltal - p_deltar);
+  float curvature = (p_deltal + p_deltar) / (p_deltal - p_deltar);
   float distancetraveled = (p_deltal + p_deltar) / 2;
   float theta = distancetraveled / fabs(curvature);
   BKND::P2D changeinposition(fabs(curvature) * cos(theta),

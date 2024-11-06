@@ -169,7 +169,7 @@ float Interpolate(float p_timepercent) {
 
 Thread::Thread(
     void (*p_func)()) { // create a new thread with a function as a parameter
-  DBUG thread_create(p_func);
+  DBUG m_Thethread = thread_create(p_func);
 }
 void Thread::Run() const { // start the thread
   DBUG thread_start(m_Thethread);

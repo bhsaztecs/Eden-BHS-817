@@ -4,8 +4,9 @@ See https://github.com/kipr/libwallaby
 Eden is licensed under GNU AGPL.
 to compile: use
 ```bash
-g++ $KIPRLIB \
-$(ls code/src/*.cpp | grep -v interface.cpp) \
-code/src/interface.cpp example.cpp \
--o example_program.o
+g++ -Iinclude/* -I" \
+/usr/local/include/include" \
+-Wall src/*.cpp -L"/usr/local/lib" \
+-lkipr -lm -o "bin/botball_user_program" \
+-lz -lpthread
 ```

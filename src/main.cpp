@@ -14,7 +14,7 @@ void Wait(float seconds) {
 }
 void update() {
   while (true) { // indefinitely
-    Wait(0.5);   // delay
+    msleep(500); // delay
     std::cout << BKND::TTDA(arm.Angle()) << std::endl;
   }
 }
@@ -24,19 +24,19 @@ int main() {
     BKND::misc::waitforlight(startlight.m_Port);
     shut_down_in(119);
   }
-    std::cout << "abt to thread" << std::endl;
-  BKND::Thread UPDATE(update);
-    std::cout << "thread made" << std::endl;
+  std::cout << "abt to thread" << std::endl;
+  BKND::Thread UPDATE([]() { BKND::motors::Velocity(tank.m_pass); });
+  std::cout << "thread made" << std::endl;
   UPDATE.Run();
-    std::cout << "thread ran" << std::endl;
+  std::cout << "thread ran" << std::endl;
   Wait(1);
-    std::cout << "started thread" << std::endl;
+  std::cout << "started thread" << std::endl;
   tank.Accelerate(100 /*left goal*/, 100 /*right goal*/,
                   5 /*tics per second per second*/);
   tank.Accelerate(0, 0, 5);
-  arm.GoTo(45 /*angle*/, 1 /*time*/);
-    std::cout << "accelerated and armed" << std::endl;
-  navigate.Face(-180, 2);
+  // arm.GoTo(45 /*angle*/, 1 /*time*/);
+  // std::cout << "accelerated and armed" << std::endl;
+  // navigate.Face(-180, 2);
   Wait(1);
   std::cout << "hello!" << std::endl;
   return 0;
