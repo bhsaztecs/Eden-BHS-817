@@ -17,8 +17,10 @@ string PrettyTime(int p_ms) {
   if ((found != std::string::npos) && (found != msStr.size() - 1)) {
     msStr = msStr.substr(0, found + 1);
   }
-
-  return std::to_string(min) + ":" + std::to_string(sec) + msStr.substr(1);
+  msStr.erase(0, 1);
+  msStr += "0";
+  return std::to_string(min) + ":" + std::to_string(sec) + "." +
+         msStr.substr(1);
 }
 
 float Rad(float p_degrees) { return p_degrees * 0.01745329251; }
