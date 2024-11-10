@@ -24,7 +24,7 @@ float distance(float x) {
 int main() {
   if (false /*tournament mode*/) {
     BKND::misc::waitforlight(startlight.m_Port);
-    shut_down_in(119);
+    shut_down_in(119)
   }
   BKND::Thread VELOCITY([]() { BKND::motors::Velocity(tank.m_pass); });
   BKND::Thread TIMER([]() { BKND::misc::Timer(); });
