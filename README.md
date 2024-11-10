@@ -4,7 +4,7 @@ See https://github.com/kipr/libwallaby
 
 Eden is licensed under GNU AGPL.
 
-src/main.cpp is both an example, and a test. if it does something weird, you broke something.
+src/main.cpp is both an example, and a test.
 
 to compile on a wombat: use
 ```bash
