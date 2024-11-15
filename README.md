@@ -8,7 +8,8 @@ src/main.cpp is both an example and a test.
 
 to compile on a wombat: use
 ```bash
-sudo g++ -Iinclude/* -I" \
+sudo g++ -std=c++17 -g \
+-Iinclude/* -I" \
 /usr/local/include/include" \
 -Wall src/*.cpp -L"/usr/local/lib" \
 -lkipr -lm -o "bin/botball_user_program" \
