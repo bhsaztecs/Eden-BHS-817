@@ -1,5 +1,5 @@
 # Ignore everything inside /code/kipr but not other content in /code
-/bin
+/bin/*
 
 # Prerequisites
 *.d
