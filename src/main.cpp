@@ -33,13 +33,15 @@ int main() {
     ao();
     msleep(500);
     tank.Speed(85,100,1.5);
-    tank.Speed(100,15,0.98);
+    tank.Speed(100,15,0.88);
     auto t1 = BKND::G_CurrentMS;
   while (ground.Value() < 0.92){
-        tank.Speed(100,100,0.1);
+        tank.Speed(50,50,0.1);
   }
     auto t2 = BKND::G_CurrentMS;
-    tank.Speed(100,100,(t2-t1)/1000);
-    tank.Speed(25,100,1.5);
+    tank.Speed(50,50,(t2-t1)/1000);
+    tank.Speed(0,100,1);
+    tank.Speed(-50,-50,1);
+
   return 0;
 }
