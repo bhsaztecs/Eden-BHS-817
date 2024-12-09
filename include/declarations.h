@@ -1,8 +1,10 @@
 #pragma once
 #include <chrono>
 #include <cmath>
+#include <fstream>
 #include <iostream>
 #include <kipr/kipr.h>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -106,21 +108,21 @@ void AngularPathfind(float, float,
                      pass);         /*Updates orientation based on inputs*/
 void LinearPathfind(float, float);  /*Updates position based on inputs*/
 void DynamicPathfind(float, float); /*Updates position and orientation based on
-                                       inputs. MAY DIVIDE BY 0*/
+         inputs. MAY DIVIDE BY 0*/
 void Face(float, float, pass); // face a certain degree heading in given time
 void GoTo(BKND::P2D, float, pass); // go to an (x,y) coordinate in a given time
-}; // namespace pathFind
+};                                 // namespace pathFind
 
 namespace sensors {
 enum type { Analog, Digital };
 
 namespace dgtl {
 bool Value(int); // get the value of a port
-}; // namespace dgtl
+};               // namespace dgtl
 namespace nlg {
 float Value(int); // get the value of a port as a percent of the max
 int Raw(int);     // get the raw value of a port
-}; // namespace nlg
+};                // namespace nlg
 namespace accel {
 void Calibrate();  // calibrates the accelerometer
 float Magnitude(); // gets the magnitude of the vector the accelerometer is
@@ -129,7 +131,7 @@ float Pitch();     // gets the pitch of the vector
 float Yaw();       // gets the yaw of the vector
 void Update();     // update the vector's values. (automatically called on
                    // mag,pitch,yaw)
-}; // namespace accel
+};                 // namespace accel
 namespace gyro {
 void Calibrate();
 float Magnitude();
@@ -147,8 +149,8 @@ void Update();
 namespace bttry {
 int Power();     // get the power level from 0-100
 bool Critical(); // is the battery less than 33% full?
-}; // namespace bttry
-}; // namespace sensors
+};               // namespace bttry
+};               // namespace sensors
 
 namespace servos {
 void Set(int, float);
@@ -169,7 +171,7 @@ void Rotation(float p_leftdegrees, float p_rightdegrees, float p_timeinseconds,
 void Accelerate(float p_leftmaxpercent, float p_rightmaxpercent,
                 float p_timeinseconds, pass p_vals); // interpolate to a speed
 void Brake(pass p_vals);                             // turn on the brakes
-}; // namespace motors
+};                                                   // namespace motors
 
 class P2D {
 public:
@@ -225,15 +227,33 @@ public:
   Thread(void (*p_func)());
   void Run() const;  // start the thread
   void Kill() const; // end the thread
-}; // namespace newThread
+};                   // namespace newThread
 
-inline long int G_CurrentMS;
-inline std::vector<worldSpace *> G_Obstacles;
-inline worldSpace G_Position(0, 0, 0, 0);
+string getLogfile();
+
+extern long int G_CurrentMS;
+extern std::ofstream G_file;
+extern std::vector<worldSpace *> G_Obstacles;
+extern worldSpace G_Position;
+
+template <typename T>
+void logVariable(const std::string &name, const T &value) {
+  BKND::G_file << name << "=" << value << "; ";
+}
+
+template <typename T, typename... Ts>
+void logVariables(const std::string &names, const T &value, const Ts &...rest) {
+  std::istringstream iss(names);
+  std::string varName;
+  std::getline(iss, varName, ',');
+  logVariable(varName, value);
+  if (sizeof...(rest) > 0) {
+    logVariables(names.substr(varName.length() + 1), rest...);
+  }
+}
+
+#define LOG_VARS(...) logVariables(#__VA_ARGS__, __VA_ARGS__)
 #define DBUG                                                                   \
-  std::cout << __PRETTY_FUNCTION__ << " called at "                            \
-            << BKND::PrettyTime(BKND::G_CurrentMS) << std::endl;
-#define BPOINT                                                                 \
-  DBUG string temp;                                                            \
-  std::cin >> temp;
+  BKND::G_file << __FILE__ << ":" << __LINE__ << " " << __PRETTY_FUNCTION__    \
+               << " @ " << BKND::PrettyTime(BKND::G_CurrentMS) << std::endl;
 } // namespace BKND

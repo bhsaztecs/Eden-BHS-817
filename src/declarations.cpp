@@ -1,5 +1,17 @@
 #include "../include/declarations.h"
 namespace BKND {
+
+long int G_CurrentMS = 0;
+std::ofstream G_file(getLogfile());
+std::vector<worldSpace *> G_Obstacles;
+worldSpace G_Position(0, 0, 0, 0);
+
+string getLogfile() {
+  int n = 1;
+  while (!std::ofstream("log" + std::to_string(n) + ".txt"))
+    n++;
+  return "log" + std::to_string(n) + ".txt";
+}
 string PrettyTime(int p_ms) {
   int min;
   int sec;

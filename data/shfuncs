@@ -7,17 +7,17 @@ shell() {
 }
 crosscomp() {
         sudo aarch64-linux-gnu-g++ -std=c++17 -g \
-        -Iinclude/* -I" \
-        /usr/local/include/include" \
-        -Wall src/*.cpp -L"/usr/local/lib" \
+        -I"include/*" -I \
+        "/usr/local/include/include" \
+        -Wall "src/*.cpp" -L"/usr/local/lib" \
         -lkipr -lm -o "bin/botball_user_program" \
         -lz -lpthread
 }
 comp() {
         sudo g++ -std=c++17 -g \
-        -Iinclude/* -I" \
-        /usr/local/include/include" \
-        -Wall src/*.cpp -L"/usr/local/lib" \
+        -I"include/*" -I \
+        "/usr/local/include/include" \
+        -Wall "src/*.cpp" -L"/usr/local/lib" \
         -lkipr -lm -o "bin/botball_user_program" \
         -lz -lpthread
 }
