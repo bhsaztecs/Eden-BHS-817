@@ -246,6 +246,8 @@ void logVariables(const std::string &names, const T &value, const Ts &...rest) {
   logVariable(varName, value);
   if (sizeof...(rest) > 0) {
     logVariables(names.substr(varName.length() + 1), rest...);
+  } else {
+    BKND::G_file << std::endl;
   }
 }
 
