@@ -6,9 +6,7 @@ std::ofstream G_file(getLogfile());
 std::vector<worldSpace *> G_Obstacles;
 worldSpace G_Position(0, 0, 0, 0);
 
-string getLogfile() {
-  return "data/log.txt";
-}
+string getLogfile() { return "data/log.txt"; }
 string PrettyTime(int p_ms) {
   int min;
   int sec;
@@ -37,33 +35,13 @@ float Deg(float p_radians) { return p_radians * 57.2957795131; }
 float mm(float p_inches) { return p_inches * 25.4; }
 float inch(float p_mm) { return p_mm / 25.4; }
 
-/*
- * ATBC();
- * A to B for the C
- * A = degrees
- * B = ticks
- * C = wheels
- * Degrees to Ticks for the Wheels
- */
-int DTTW(float p_degrees) { return p_degrees * 5.55; }
-
-float TTDW(int p_ticks) { return p_ticks / 5.55; }
-
-float DTIW(float p_degrees) { return 1.5 * Rad(p_degrees); }
-
-float ITDW(float p_inches) { return Deg(1.5 / p_inches); }
-
-float TTIW(int p_ticks) { return p_ticks / 206.49999936; }
-
-int ITTW(float p_inches) { return p_inches * 206.49999936; }
-/***********************/
-int DTTA(float p_degrees) { return (-12.2222 * p_degrees) + 1450; }
-
-float TTDA(int p_tics) { return (-0.081818 * p_tics) + 118.636; }
-
-int DTTC(float p_degrees) { return (12.05 * p_degrees) + 723.5; }
-
-float TTDC(int p_tics) { return (0.082 * p_tics) - 60; }
+float lerp(pointpair p_slope, float p_x) {
+  /* ( (del y over del x) * x ) - p0.x + p0.y */
+  float dely = p_slope.second.m_Y - p_slope.first.m_Y;
+  float delx = p_slope.second.m_X - p_slope.first.m_X;
+  float slope = dely / delx;
+  return (slope * p_x) - p_slope.first.m_X + p_slope.first.m_Y;
+}
 
 P2D::P2D(float p_x, float p_y) {
   this->m_X = p_x;
