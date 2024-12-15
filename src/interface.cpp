@@ -46,7 +46,9 @@ void Motors::Accelerate(float p_leftgoalpercent, float p_rightgoalpercent,
 }
 void Motors::Brake() const { DBUG BKND::motors::Brake(m_pass); }
 
-Servos::Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max) { DBUG }
+Servos::Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max) {
+  DBUG m_Port = p_port;
+}
 void Servos::Set(float p_angle) const {
   DBUG BKND::servos::Set(m_Port, p_angle, m_Slope);
 }
