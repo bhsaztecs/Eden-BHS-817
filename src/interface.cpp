@@ -16,9 +16,11 @@ void Motors::NormalizeMultipliers(float p_leftmultiplier,
 }
 
 Motors::Motors(int p_leftport, int p_rightport, float p_leftmultiplier,
-               float p_rightmultiplier, float p_athenamargin, float p_turnrate)
+               float p_rightmultiplier, float p_athenamargin, float p_turnrate,
+               BKND::P2D p_min, BKND::P2D p_max)
     : m_pass(p_leftport, p_rightport, p_leftmultiplier, p_rightmultiplier, 1.0F,
-             p_athenamargin, p_turnrate, m_LeftSpeed, m_RightSpeed) {
+             p_athenamargin, p_turnrate, m_LeftSpeed, m_RightSpeed, p_min,
+             p_max) {
   DBUG NormalizeMultipliers(p_leftmultiplier, p_rightmultiplier);
   Clear();
 }
@@ -48,6 +50,7 @@ void Motors::Brake() const { DBUG BKND::motors::Brake(m_pass); }
 
 Servos::Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max) {
   DBUG m_Port = p_port;
+  m_Slope = BKND::pointpair(p_min, p_max);
 }
 void Servos::Set(float p_angle) const {
   DBUG BKND::servos::Set(m_Port, p_angle, m_Slope);

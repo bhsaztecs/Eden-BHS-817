@@ -6,10 +6,10 @@ class Motors {
 public:
   BKND::pass m_pass;
   float m_LeftSpeed, m_RightSpeed;
-  BKND::pointpair m_Slope;
 
   Motors(int p_leftport, int p_rightport, float p_leftmultiplier,
-         float p_rightmultiplier, float p_athenamargin, float p_turnrate);
+         float p_rightmultiplier, float p_athenamargin, float p_turnrate,
+         BKND::P2D p_min, BKND::P2D p_max);
   void Clear() const;
   void Velocity() const;
   void Speed(float p_leftgoalpercent, float p_rightgoalpercent,
