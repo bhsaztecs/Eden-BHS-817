@@ -76,11 +76,12 @@ struct pass {
   pointpair slope;
   pass(int p_leftmotorport, int p_rightmotorport, float p_leftmultiplier,
        float p_rightmultiplier, float p_timemultiplier, float p_athenamargin,
-       float p_turnrate, float &p_leftspeed, float &p_rightspeed)
+       float p_turnrate, float &p_leftspeed, float &p_rightspeed, BKND::P2D min,
+       BKND::P2D max)
       : leftmotor(p_leftmotorport), rightmotor(p_rightmotorport),
         lmm(p_leftmultiplier), rmm(p_rightmultiplier), tmm(p_timemultiplier),
         margin(p_athenamargin), turnrate(p_turnrate), leftspeed(p_leftspeed),
-        rightspeed(p_rightspeed) {}
+        rightspeed(p_rightspeed), slope(min, max) {}
 };
 float Deg(float); /*Convert Radians to Degrees*/
 float Rad(float); /*Convert Degrees to Radians*/
