@@ -50,16 +50,16 @@ Servos::Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max) {
   DBUG m_Port = p_port;
 }
 void Servos::Set(float p_angle) const {
-  DBUG BKND::servos::Set(m_Port, p_angle);
+  DBUG BKND::servos::Set(m_Port, p_angle, m_Slope);
 }
 void Servos::Change(float p_angle) const {
-  DBUG BKND::servos::Change(m_Port, p_angle);
+  DBUG BKND::servos::Change(m_Port, p_angle, m_Slope);
 }
 void Servos::GoTo(float p_angle, float p_time) const {
-  DBUG BKND::servos::Move(m_Port, p_angle, p_time);
+  DBUG BKND::servos::Move(m_Port, p_angle, p_time, m_Slope);
 }
 float Servos::Angle() const {
-  DBUG return BKND::TTDA(get_servo_position(m_Port));
+  DBUG return BKND::lerp(m_Slope, get_servo_position(m_Port));
 }
 
 Sensors<BKND::sensors::type::Analog>::Sensors(int p_port) : m_Port(p_port) {

@@ -22,13 +22,13 @@ void Velocity(pass p_vals) {
 }
 void Speed(float p_leftpercent, float p_rightpercent, float p_timeinseconds,
            pass p_vals) {
-  float leftposition1 = BKND::TTIW(gmpc(p_vals.leftmotor));
-  float rightposition1 = BKND::TTIW(gmpc(p_vals.rightmotor));
+  float leftposition1 = BKND::lerp(p_vals.slope, gmpc(p_vals.leftmotor));
+  float rightposition1 = BKND::lerp(p_vals.slope, gmpc(p_vals.rightmotor));
   motor(p_vals.leftmotor, (p_leftpercent * p_vals.lmm));
   motor(p_vals.rightmotor, (p_rightpercent * p_vals.rmm));
   msleep((p_timeinseconds * 1000) * p_vals.tmm);
-  float leftposition2 = BKND::TTIW(gmpc(p_vals.leftmotor));
-  float rightposition2 = BKND::TTIW(gmpc(p_vals.rightmotor));
+  float leftposition2 = BKND::lerp(p_vals.slope, gmpc(p_vals.leftmotor));
+  float rightposition2 = BKND::lerp(p_vals.slope, gmpc(p_vals.rightmotor));
   float leftdelta = leftposition2 - leftposition1;
   float rightdelta = rightposition2 - rightposition1;
   BKND::pathFind::AthenaDecision(leftdelta, rightdelta, p_vals);
@@ -36,15 +36,15 @@ void Speed(float p_leftpercent, float p_rightpercent, float p_timeinseconds,
 void Distance(float p_leftinches, float p_rightinches, float p_timeinseconds,
               pass p_vals) {
   DBUG float leftspeed =
-      float((BKND::ITTW(p_leftinches / p_timeinseconds)) / 15.0);
+      float((BKND::lerp(p_vals.slope, p_leftinches / p_timeinseconds)) / 15.0);
   float rightspeed =
-      float((BKND::ITTW(p_rightinches / p_timeinseconds)) / 15.0);
+      float((BKND::lerp(p_vals.slope, p_rightinches / p_timeinseconds)) / 15.0);
   Speed(leftspeed, rightspeed, p_timeinseconds, p_vals);
 }
 void Rotation(float p_leftdegrees, float p_rightdegrees, float p_timeinseconds,
               pass p_vals) {
-  DBUG float leftdistanec = BKND::DTIW(p_leftdegrees);
-  float rightdistance = BKND::DTIW(p_rightdegrees);
+  DBUG float leftdistanec = BKND::lerp(p_vals.slope, p_leftdegrees);
+  float rightdistance = BKND::lerp(p_vals.slope, p_rightdegrees);
   BKND::motors::Distance(leftdistanec, rightdistance, p_timeinseconds, p_vals);
 }
 void Accelerate(float p_leftmaxpercent, float p_rightmaxpercent,

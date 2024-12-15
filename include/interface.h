@@ -6,6 +6,7 @@ class Motors {
 public:
   BKND::pass m_pass;
   float m_LeftSpeed, m_RightSpeed;
+  BKND::pointpair m_Slope;
 
   Motors(int p_leftport, int p_rightport, float p_leftmultiplier,
          float p_rightmultiplier, float p_athenamargin, float p_turnrate);
@@ -24,7 +25,7 @@ public:
 class Servos {
 public:
   int m_Port;
-  BKND::P2D m_Minimum, m_Maximum;
+  BKND::pointpair m_Slope;
   Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max);
   void Set(float p_angle) const;
   void Change(float p_angle) const;

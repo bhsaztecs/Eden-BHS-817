@@ -8,7 +8,7 @@ void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
     return;
   }
   if (BKND::MarginOfError(p_deltal, p_deltar, p_vals.margin)) {
-    BKND::pathFind::LinearPathfind(p_deltal, p_deltar);
+    BKND::pathFind::LinearPathfind(p_deltal, p_deltar, p_vals);
     return;
   }
   BKND::pathFind::DynamicPathfind(p_deltal, p_deltar);
@@ -20,8 +20,8 @@ void AngularPathfind(float p_deltal, float p_deltar, pass p_vals) {
   BKND::G_Position.m_Orientation += orientationoffset;
 }
 
-void LinearPathfind(float p_deltal, float p_deltar) {
-  float distance = BKND::DTIW((p_deltal + p_deltar) / 2);
+void LinearPathfind(float p_deltal, float p_deltar, pass p_vals) {
+  float distance = BKND::lerp(p_vals.slope, (p_deltal + p_deltar) / 2);
   BKND::P2D delta(distance * cos(BKND::G_Position.m_Orientation),
                   distance * sin(BKND::G_Position.m_Orientation));
 

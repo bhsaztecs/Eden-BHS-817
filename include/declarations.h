@@ -6,15 +6,63 @@
 #include <kipr/kipr.h>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 using std::string;
 using std::vector;
 namespace BKND {
-class Thread;     // thread functionality
-class P2D;        // 2 dimensional coordinate
+class Thread; // thread functionality
+class P2D;    // 2 dimensional coordinate
+using pointpair = std::pair<BKND::P2D, BKND::P2D>;
 class P3D;        // 3 dimensional coordinate
 class worldSpace; // 2 dimensional coordinate with additional functionality
+class P2D {
+public:
+  float m_X;
+  float m_Y;
+  P2D(float x = 0, float y = 0);
+  float Magnitude() const;
+  float Angle() const;
+  P2D operator-(const P2D &p_other) const;
+  P2D operator+(const P2D &p_other) const;
+  void operator=(const P2D &p_other);
+  bool operator==(const P2D &p_other) const;
+  void operator+=(const P2D &p_other);
+  void operator-=(const P2D &p_other);
+};
+class P3D {
+
+public:
+  float m_X;
+  float m_Y;
+  float m_Z;
+  P3D(float p_x = 0, float p_y = 0, float p_z = 0);
+  float Magnitude() const;
+  float Pitch() const;
+  float Yaw() const;
+  P3D operator-(const P3D &p_other) const;
+  P3D operator+(const P3D &p_other) const;
+  void operator=(const P3D &p_other);
+  bool operator==(const P3D &p_other) const;
+  void operator+=(const P3D &p_other);
+  void operator-=(const P3D &p_other);
+};
+class worldSpace : public P2D {
+public:
+  float m_Orientation;
+  float m_Radius;
+
+  worldSpace(float p_x = 0, float p_y = 0, float p_r = 0, float p_o = 0);
+
+  bool operator==(const worldSpace &p_other);
+  bool operator!=(const worldSpace &p_other);
+  worldSpace operator-(const P2D &p_other);
+  worldSpace operator+(const P2D &p_other);
+  void operator+=(const P2D &p_other);
+  void operator-=(const P2D &p_other);
+  worldSpace operator=(const worldSpace &p_other);
+}; // namespace worldSpace:public P2D
 struct pass {
   int leftmotor; // left motor port
   int rightmotor;
@@ -25,6 +73,7 @@ struct pass {
   float turnrate;
   float &leftspeed;
   float &rightspeed;
+  pointpair slope;
   pass(int p_leftmotorport, int p_rightmotorport, float p_leftmultiplier,
        float p_rightmultiplier, float p_timemultiplier, float p_athenamargin,
        float p_turnrate, float &p_leftspeed, float &p_rightspeed)
@@ -33,18 +82,13 @@ struct pass {
         margin(p_athenamargin), turnrate(p_turnrate), leftspeed(p_leftspeed),
         rightspeed(p_rightspeed) {}
 };
-float Deg(float);         /*Convert Radians to Degrees*/
-float Rad(float);         /*Convert Degrees to Radians*/
-float ITDW(float);        /*Convert inches to degrees (for the wheel)*/
-float DTIW(float);        /*convert degrees to inches (for the wheel)*/
-int DTTA(float);          /*convert degrees to ticks (for the arm servo)*/
-int DTTC(float);          /*convert degrees to ticks (for the claw servo)*/
-int DTTW(float);          /*convert degrees to ticks (for the wheel)*/
-int ITTW(float);          /*convert inches to ticks (for the wheel)*/
-float TTDA(int);          /*convert ticks to degrees (for the arm servo)*/
-float TTDC(int);          /*convert ticks to degrees (for the claw servo)*/
-float TTDW(int);          /*convert ticks to degrees (for the wheel)*/
-float TTIW(int);          /*convert ticks to inches (for the wheel)*/
+float Deg(float); /*Convert Radians to Degrees*/
+float Rad(float); /*Convert Degrees to Radians*/
+float lerp(pointpair,
+           float); /*get a linear transition from (x1,y1) to (x2,y2) at x */
+/* IN {-> (minx,miny) (maxx,maxy) x
+ * OUT{-> y at x
+ */
 float Interpolate(float); /*get a smooth transition from 0 to 1*/
 /* IN {-> Time (from 1 to 0)
  * OUT{-> value returned from the equation.
@@ -105,8 +149,8 @@ void AthenaDecision(float, float,
 /* IN {-> Change in Left wheel position, Change in Right wheel position
  */
 void AngularPathfind(float, float,
-                     pass);         /*Updates orientation based on inputs*/
-void LinearPathfind(float, float);  /*Updates position based on inputs*/
+                     pass);              /*Updates orientation based on inputs*/
+void LinearPathfind(float, float, pass); /*Updates position based on inputs*/
 void DynamicPathfind(float, float); /*Updates position and orientation based on
          inputs. MAY DIVIDE BY 0*/
 void Face(float, float, pass); // face a certain degree heading in given time
@@ -153,9 +197,9 @@ bool Critical(); // is the battery less than 33% full?
 };               // namespace sensors
 
 namespace servos {
-void Set(int, float);
-void Change(int, float);
-void Move(int, float, float);
+void Set(int, float, pointpair);
+void Change(int, float, pointpair);
+void Move(int, float, float, pointpair);
 }; // namespace servos
 
 namespace motors {
@@ -172,53 +216,6 @@ void Accelerate(float p_leftmaxpercent, float p_rightmaxpercent,
                 float p_timeinseconds, pass p_vals); // interpolate to a speed
 void Brake(pass p_vals);                             // turn on the brakes
 };                                                   // namespace motors
-
-class P2D {
-public:
-  float m_X;
-  float m_Y;
-  P2D(float x = 0, float y = 0);
-  float Magnitude() const;
-  float Angle() const;
-  P2D operator-(const P2D &p_other) const;
-  P2D operator+(const P2D &p_other) const;
-  void operator=(const P2D &p_other);
-  bool operator==(const P2D &p_other) const;
-  void operator+=(const P2D &p_other);
-  void operator-=(const P2D &p_other);
-};
-class P3D {
-
-public:
-  float m_X;
-  float m_Y;
-  float m_Z;
-  P3D(float p_x = 0, float p_y = 0, float p_z = 0);
-  float Magnitude() const;
-  float Pitch() const;
-  float Yaw() const;
-  P3D operator-(const P3D &p_other) const;
-  P3D operator+(const P3D &p_other) const;
-  void operator=(const P3D &p_other);
-  bool operator==(const P3D &p_other) const;
-  void operator+=(const P3D &p_other);
-  void operator-=(const P3D &p_other);
-};
-class worldSpace : public P2D {
-public:
-  float m_Orientation;
-  float m_Radius;
-
-  worldSpace(float p_x = 0, float p_y = 0, float p_r = 0, float p_o = 0);
-
-  bool operator==(const worldSpace &p_other);
-  bool operator!=(const worldSpace &p_other);
-  worldSpace operator-(const P2D &p_other);
-  worldSpace operator+(const P2D &p_other);
-  void operator+=(const P2D &p_other);
-  void operator-=(const P2D &p_other);
-  worldSpace operator=(const worldSpace &p_other);
-}; // namespace worldSpace:public P2D
 
 float Interpolate(float p_timepercent);
 class Thread {
