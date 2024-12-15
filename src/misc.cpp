@@ -42,8 +42,8 @@ void waitforlight(int p_port) {
   while (any_button() == 0) {
     onvalue = analog(p_port);
     std::cout << "ON: " << onvalue << std::endl;
-    console_clear();
     msleep(25);
+    console_clear();
     if (any_button() != 0) {
       break;
     }
@@ -53,8 +53,8 @@ void waitforlight(int p_port) {
   while (any_button() == 0) {
     offvalue = analog(p_port);
     std::cout << "OFF: " << offvalue << std::endl;
-    console_clear();
     msleep(25);
+    console_clear();
     if (any_button() != 0) {
       break;
     }
