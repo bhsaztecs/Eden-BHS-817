@@ -48,11 +48,12 @@ float mm(float p_inches) { return p_inches * 25.4; }
 float inch(float p_mm) { return p_mm / 25.4; }
 
 float lerp(pointpair p_slope, float p_x) {
-  /* ( (del y over del x) * x ) - p0.x + p0.y */
+  /* ( (del y over del x) * x ) + p0.y */
   float dely = p_slope.second.m_Y - p_slope.first.m_Y;
   float delx = p_slope.second.m_X - p_slope.first.m_X;
-  float slope = dely / delx;
-  return (slope * p_x) - p_slope.first.m_X + p_slope.first.m_Y;
+  float m = dely / delx;
+  float b = -((m * p_slope.second.m_X) - p_slope.second.m_Y);
+  return (m * p_x) + b;
 }
 
 P2D::P2D(float p_x, float p_y) {
