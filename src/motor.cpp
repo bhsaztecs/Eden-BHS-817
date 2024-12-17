@@ -2,11 +2,13 @@
 namespace BKND {
 namespace motors {
 void ClearMotorRotations(pass p_vals) {
-  DBUG cmpc(p_vals.leftmotor);
+  DBUG;
+  cmpc(p_vals.leftmotor);
   cmpc(p_vals.rightmotor);
 }
 void Velocity(pass p_vals) {
-  DBUG while (true) {
+  DBUG;
+  while (true) {
     float leftposition1 = gmpc(p_vals.leftmotor);
     float rightposition1 = gmpc(p_vals.rightmotor);
     msleep(100);
@@ -22,34 +24,37 @@ void Velocity(pass p_vals) {
 }
 void Speed(float p_leftpercent, float p_rightpercent, float p_timeinseconds,
            pass p_vals) {
-  float leftposition1 = BKND::lerp(p_vals.slope, gmpc(p_vals.leftmotor));
-  float rightposition1 = BKND::lerp(p_vals.slope, gmpc(p_vals.rightmotor));
+  float leftposition1 = BKND::lerp(TTI, gmpc(p_vals.leftmotor));
+  float rightposition1 = BKND::lerp(TTI, gmpc(p_vals.rightmotor));
   motor(p_vals.leftmotor, (p_leftpercent * p_vals.lmm));
   motor(p_vals.rightmotor, (p_rightpercent * p_vals.rmm));
   msleep((p_timeinseconds * 1000) * p_vals.tmm);
-  float leftposition2 = BKND::lerp(p_vals.slope, gmpc(p_vals.leftmotor));
-  float rightposition2 = BKND::lerp(p_vals.slope, gmpc(p_vals.rightmotor));
+  float leftposition2 = BKND::lerp(TTI, gmpc(p_vals.leftmotor));
+  float rightposition2 = BKND::lerp(TTI, gmpc(p_vals.rightmotor));
   float leftdelta = leftposition2 - leftposition1;
   float rightdelta = rightposition2 - rightposition1;
   BKND::pathFind::AthenaDecision(leftdelta, rightdelta, p_vals);
 }
 void Distance(float p_leftinches, float p_rightinches, float p_timeinseconds,
               pass p_vals) {
-  DBUG float leftspeed =
-      float((BKND::lerp(p_vals.slope, p_leftinches / p_timeinseconds)) / 15.0);
-  float rightspeed =
-      float((BKND::lerp(p_vals.slope, p_rightinches / p_timeinseconds)) / 15.0);
+  DBUG;
+  float leftticksps = BKND::lerp(ITT, p_leftinches) / p_timeinseconds;
+  float leftspeed = BKND::lerp(TPSTP, leftticksps);
+  float rightticksps = BKND::lerp(ITT, p_rightinches) / p_timeinseconds;
+  float rightspeed = BKND::lerp(TPSTP, rightticksps);
   Speed(leftspeed, rightspeed, p_timeinseconds, p_vals);
 }
 void Rotation(float p_leftdegrees, float p_rightdegrees, float p_timeinseconds,
               pass p_vals) {
-  DBUG float leftdistanec = BKND::lerp(p_vals.slope, p_leftdegrees);
-  float rightdistance = BKND::lerp(p_vals.slope, p_rightdegrees);
+  DBUG;
+  float leftdistanec = BKND::lerp(DTI, p_leftdegrees);
+  float rightdistance = BKND::lerp(DTI, p_rightdegrees);
   BKND::motors::Distance(leftdistanec, rightdistance, p_timeinseconds, p_vals);
 }
 void Accelerate(float p_leftmaxpercent, float p_rightmaxpercent,
                 float p_timeinseconds, pass p_vals) {
-  DBUG float leftinitialspeed = p_vals.leftspeed;
+  DBUG;
+  float leftinitialspeed = p_vals.leftspeed;
   float leftdeltaspeed = p_leftmaxpercent - leftinitialspeed;
 
   float rightinitialspeed = p_vals.rightspeed;
@@ -61,6 +66,9 @@ void Accelerate(float p_leftmaxpercent, float p_rightmaxpercent,
           p_timeinseconds / 100, p_vals);
   }
 }
-void Brake(pass p_vals) { DBUG Speed(0, 0, 0.1, p_vals); }
+void Brake(pass p_vals) {
+  DBUG;
+  Speed(0, 0, 0.1, p_vals);
+}
 } // namespace motors
 } // namespace BKND

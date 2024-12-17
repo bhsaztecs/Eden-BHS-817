@@ -21,7 +21,7 @@ void AngularPathfind(float p_deltal, float p_deltar, pass p_vals) {
 }
 
 void LinearPathfind(float p_deltal, float p_deltar, pass p_vals) {
-  float distance = BKND::lerp(p_vals.slope, (p_deltal + p_deltar) / 2);
+  float distance = BKND::lerp(DTI, (p_deltal + p_deltar) / 2);
   BKND::P2D delta(distance * cos(BKND::G_Position.m_Orientation),
                   distance * sin(BKND::G_Position.m_Orientation));
 
@@ -40,7 +40,8 @@ void DynamicPathfind(float p_deltal, float p_deltar) {
   BKND::G_Position.m_Orientation += theta;
 }
 void Face(float p_deg, float p_time, pass p_vals) {
-  DBUG BKND::worldSpace originalposition = BKND::G_Position;
+  DBUG;
+  BKND::worldSpace originalposition = BKND::G_Position;
   BKND::worldSpace origin;
   BKND::G_Position = origin;
   float deltaorientation = BKND::Rad(p_deg) - BKND::G_Position.m_Orientation;
@@ -49,7 +50,8 @@ void Face(float p_deg, float p_time, pass p_vals) {
   BKND::G_Position += originalposition;
 }
 void GoTo(BKND::P2D p_goal, float p_time, pass p_vals) {
-  DBUG BKND::worldSpace originalposition = BKND::G_Position;
+  DBUG;
+  BKND::worldSpace originalposition = BKND::G_Position;
   BKND::worldSpace origin;
   BKND::G_Position = origin;
   BKND::P2D deltaposition(p_goal - BKND::G_Position);

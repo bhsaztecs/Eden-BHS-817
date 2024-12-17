@@ -1,6 +1,18 @@
 #include "../include/declarations.h"
 namespace BKND {
 
+BKND::pointpair TTD(BKND::P2D(0, 0), BKND::P2D(1, 5.55));
+BKND::pointpair DTT(BKND::P2D(0, 0), BKND::P2D(5.55, 1));
+
+BKND::pointpair ITD(BKND::P2D(0, 0), BKND::P2D(1, Deg(1.5) / 2));
+BKND::pointpair DTI(BKND::P2D(0, 0), BKND::P2D(Deg(1.5) / 2, 1));
+
+BKND::pointpair TTI(BKND::P2D(0, 0), BKND::P2D(206.49999936, 1));
+BKND::pointpair ITT(BKND::P2D(0, 0), BKND::P2D(1, 206.49999936));
+
+BKND::pointpair PTTPS(BKND::P2D(0, 0), BKND::P2D(1, 15));
+BKND::pointpair TPSTP(BKND::P2D(0, 0), BKND::P2D(15, 1));
+
 long int G_CurrentMS = 0;
 std::ofstream G_file(getLogfile());
 std::vector<worldSpace *> G_Obstacles;
@@ -158,12 +170,15 @@ float Interpolate(float p_timepercent) {
 
 Thread::Thread(
     void (*p_func)()) { // create a new thread with a function as a parameter
-  DBUG m_Thethread = thread_create(p_func);
+  DBUG;
+  m_Thethread = thread_create(p_func);
 }
 void Thread::Run() const { // start the thread
-  DBUG thread_start(m_Thethread);
+  DBUG;
+  thread_start(m_Thethread);
 }
 void Thread::Kill() const { // end the thread
-  DBUG thread_destroy(m_Thethread);
+  DBUG;
+  thread_destroy(m_Thethread);
 }
 } // namespace BKND

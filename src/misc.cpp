@@ -36,7 +36,8 @@ void Show(bool p_vis) {
 bool Visible() { return get_extra_buttons_visible() != 0; }
 } // namespace buttons
 void waitforlight(int p_port) {
-  DBUG int onvalue;
+  DBUG;
+  int onvalue;
   int offvalue;
   std::cout << "Running";
   while (any_button() == 0) {
@@ -80,7 +81,8 @@ void waitforlight(int p_port) {
   }
 }
 void Timer() {
-  DBUG while (true) {
+  DBUG;
+  while (true) {
     msleep(1);
     BKND::G_CurrentMS++;
   }
