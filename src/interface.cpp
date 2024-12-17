@@ -1,5 +1,6 @@
 #include "../include/interface.h"
 #include "../include/declarations.h"
+#include <kipr/servo/servo.h>
 
 void Motors::NormalizeMultipliers(float p_leftmultiplier,
                                   float p_rightmultiplier) {
@@ -51,6 +52,7 @@ void Motors::Brake() const { DBUG BKND::motors::Brake(m_pass); }
 Servos::Servos(int p_port, BKND::P2D p_min, BKND::P2D p_max) {
   DBUG m_Port = p_port;
   m_Slope = BKND::pointpair(p_min, p_max);
+  set_servo_enabled(m_Port, 1);
 }
 void Servos::Set(float p_angle) const {
   DBUG BKND::servos::Set(m_Port, p_angle, m_Slope);
