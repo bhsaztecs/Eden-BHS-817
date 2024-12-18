@@ -41,20 +41,20 @@ void DynamicPathfind(float p_deltal, float p_deltar) {
 }
 void Face(float p_deg, float p_time, pass p_vals) {
   DBUG;
-  float deltaorientation = p_deg - BKND::G_Position.m_Orientation;
-  float wheelangle = deltaorientation * (p_vals.turnrate);
+  // float deltaorientation = p_deg - BKND::G_Position.m_Orientation;
+  float wheelangle = p_deg * (p_vals.turnrate);
   BKND::motors::Rotation(-wheelangle, wheelangle, p_time, p_vals);
 }
 void GoTo(BKND::P2D p_goal, float p_time, pass p_vals) {
   DBUG;
-  BKND::P2D deltaposition(p_goal - BKND::G_Position);
-  Face(deltaposition.Angle(), (p_time * deltaposition.Angle()), p_vals);
+  // BKND::P2D deltaposition(p_goal - BKND::G_Position);
+  Face(p_goal.Angle(), (p_time * p_goal.Angle()), p_vals);
 
   BKND::motors::Brake(p_vals);
   msleep(10);
 
-  BKND::motors::Distance(deltaposition.Magnitude(), deltaposition.Magnitude(),
-                         p_time * deltaposition.Magnitude(), p_vals);
+  BKND::motors::Distance(p_goal.Magnitude(), p_goal.Magnitude(),
+                         p_time * p_goal.Magnitude(), p_vals);
 }
 } // namespace pathFind
 } // namespace BKND

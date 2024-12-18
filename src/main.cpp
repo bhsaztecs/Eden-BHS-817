@@ -15,8 +15,8 @@ int main() {
   TIMER.Run();
   VELOCITY.Run();
 
-  navigate.Face(90, 1);
-  navigate.Face(0, 1);
+  navigate.Face(90, 2);
+  navigate.Face(-90, 2);
   tank.Brake();
   return 0;
 }
