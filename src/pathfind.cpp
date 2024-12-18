@@ -2,13 +2,12 @@
 namespace BKND {
 namespace pathFind {
 void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
-  if (BKND::MarginOfError(fabs(p_deltal), fabs(p_deltar), p_vals.margin) &&
-      (p_deltal != p_deltar)) {
-    BKND::pathFind::AngularPathfind(p_deltal, p_deltar, p_vals);
-    return;
-  }
   if (BKND::MarginOfError(p_deltal, p_deltar, p_vals.margin)) {
     BKND::pathFind::LinearPathfind(p_deltal, p_deltar, p_vals);
+    return;
+  }
+  if (BKND::MarginOfError(fabs(p_deltal), fabs(p_deltar), p_vals.margin)) {
+    BKND::pathFind::AngularPathfind(p_deltal, p_deltar, p_vals);
     return;
   }
   BKND::pathFind::DynamicPathfind(p_deltal, p_deltar);

@@ -15,8 +15,9 @@ int main() {
   TIMER.Run();
   VELOCITY.Run();
 
-  navigate.Face(90, 2);
-  navigate.Face(0, 2);
+  navigate.Face(90 - BKND::G_Position.m_Orientation, 2);
+  std::cout << BKND::G_Position.m_Orientation << std::endl;
+  navigate.Face(0 - BKND::G_Position.m_Orientation, 2);
   tank.Brake();
   return 0;
 }
