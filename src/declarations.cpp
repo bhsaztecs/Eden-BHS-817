@@ -1,6 +1,18 @@
 #include "../include/declarations.h"
 namespace BKND {
 
+BKND::pointpair TTD(BKND::P2D(0, 0), BKND::P2D(1, 5.55));
+BKND::pointpair DTT(BKND::P2D(0, 0), BKND::P2D(5.55, 1));
+
+BKND::pointpair ITD(BKND::P2D(0, 0), BKND::P2D(1, Deg(1.5) / 2));
+BKND::pointpair DTI(BKND::P2D(0, 0), BKND::P2D(Deg(1.5) / 2, 1));
+
+BKND::pointpair TTI(BKND::P2D(0, 0), BKND::P2D(206.49999936, 1));
+BKND::pointpair ITT(BKND::P2D(0, 0), BKND::P2D(1, 206.49999936));
+
+BKND::pointpair PTTPS(BKND::P2D(0, 0), BKND::P2D(1, 15));
+BKND::pointpair TPSTP(BKND::P2D(0, 0), BKND::P2D(15, 1));
+
 long int G_CurrentMS = 0;
 std::ofstream G_file(getLogfile());
 std::vector<worldSpace *> G_Obstacles;
@@ -36,11 +48,12 @@ float mm(float p_inches) { return p_inches * 25.4; }
 float inch(float p_mm) { return p_mm / 25.4; }
 
 float lerp(pointpair p_slope, float p_x) {
-  /* ( (del y over del x) * x ) - p0.x + p0.y */
+  /* ( (del y over del x) * x ) + p0.y */
   float dely = p_slope.second.m_Y - p_slope.first.m_Y;
   float delx = p_slope.second.m_X - p_slope.first.m_X;
-  float slope = dely / delx;
-  return (slope * p_x) - p_slope.first.m_X + p_slope.first.m_Y;
+  float m = dely / delx;
+  float b = -((m * p_slope.second.m_X) - p_slope.second.m_Y);
+  return (m * p_x) + b;
 }
 
 P2D::P2D(float p_x, float p_y) {
@@ -126,16 +139,19 @@ worldSpace::worldSpace(float p_x, float p_y, float p_r, float p_orientation) {
 }
 
 bool worldSpace::operator==(const worldSpace &p_other) {
-  return (this->m_X == p_other.m_X) && (this->m_Y == p_other.m_Y);
+  return (this->m_X == p_other.m_X) && (this->m_Y == p_other.m_Y) &&
+         (this->m_Orientation == p_other.m_Orientation);
 }
 bool worldSpace::operator!=(const worldSpace &p_other) {
-  return (this->m_X != p_other.m_X) || (this->m_Y != p_other.m_Y);
+  return (this != &p_other);
 }
 worldSpace worldSpace::operator-(const P2D &p_other) {
-  return worldSpace(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y);
+  return worldSpace(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y,
+                    this->m_Orientation);
 }
 worldSpace worldSpace::operator+(const P2D &p_other) {
-  return worldSpace(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y);
+  return worldSpace(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y,
+                    this->m_Orientation);
 }
 void worldSpace::operator+=(const P2D &p_other) {
   P2D temp(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y);
@@ -146,6 +162,20 @@ void worldSpace::operator-=(const P2D &p_other) {
   P2D temp(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y);
   this->m_X = temp.m_X;
   this->m_Y = temp.m_Y;
+}
+worldSpace worldSpace::operator-(const worldSpace &p_other) {
+  return worldSpace(this->m_X - p_other.m_X, this->m_Y - p_other.m_Y,
+                    this->m_Orientation - p_other.m_Orientation);
+}
+worldSpace worldSpace::operator+(const worldSpace &p_other) {
+  return worldSpace(this->m_X + p_other.m_X, this->m_Y + p_other.m_Y,
+                    this->m_Orientation + p_other.m_Orientation);
+}
+void worldSpace::operator+=(const worldSpace &p_other) {
+  *this = (*this + p_other);
+}
+void worldSpace::operator-=(const worldSpace &p_other) {
+  *this = (*this - p_other);
 }
 worldSpace worldSpace::operator=(const worldSpace &p_other) { return p_other; }
 
@@ -158,12 +188,15 @@ float Interpolate(float p_timepercent) {
 
 Thread::Thread(
     void (*p_func)()) { // create a new thread with a function as a parameter
-  DBUG m_Thethread = thread_create(p_func);
+  DBUG;
+  m_Thethread = thread_create(p_func);
 }
 void Thread::Run() const { // start the thread
-  DBUG thread_start(m_Thethread);
+  DBUG;
+  thread_start(m_Thethread);
 }
 void Thread::Kill() const { // end the thread
-  DBUG thread_destroy(m_Thethread);
+  DBUG;
+  thread_destroy(m_Thethread);
 }
 } // namespace BKND

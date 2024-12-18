@@ -12,6 +12,7 @@
 using std::string;
 using std::vector;
 namespace BKND {
+
 class Thread; // thread functionality
 class P2D;    // 2 dimensional coordinate
 using pointpair = std::pair<BKND::P2D, BKND::P2D>;
@@ -53,7 +54,7 @@ public:
   float m_Orientation;
   float m_Radius;
 
-  worldSpace(float p_x = 0, float p_y = 0, float p_r = 0, float p_o = 0);
+  worldSpace(float p_x = 0, float p_y = 0, float p_o = 0, float p_r = 0);
 
   bool operator==(const worldSpace &p_other);
   bool operator!=(const worldSpace &p_other);
@@ -61,6 +62,10 @@ public:
   worldSpace operator+(const P2D &p_other);
   void operator+=(const P2D &p_other);
   void operator-=(const P2D &p_other);
+  worldSpace operator-(const worldSpace &p_other);
+  worldSpace operator+(const worldSpace &p_other);
+  void operator+=(const worldSpace &p_other);
+  void operator-=(const worldSpace &p_other);
   worldSpace operator=(const worldSpace &p_other);
 }; // namespace worldSpace:public P2D
 struct pass {
@@ -73,15 +78,13 @@ struct pass {
   float turnrate;
   float &leftspeed;
   float &rightspeed;
-  pointpair slope;
   pass(int p_leftmotorport, int p_rightmotorport, float p_leftmultiplier,
        float p_rightmultiplier, float p_timemultiplier, float p_athenamargin,
-       float p_turnrate, float &p_leftspeed, float &p_rightspeed, BKND::P2D min,
-       BKND::P2D max)
+       float p_turnrate, float &p_leftspeed, float &p_rightspeed)
       : leftmotor(p_leftmotorport), rightmotor(p_rightmotorport),
         lmm(p_leftmultiplier), rmm(p_rightmultiplier), tmm(p_timemultiplier),
         margin(p_athenamargin), turnrate(p_turnrate), leftspeed(p_leftspeed),
-        rightspeed(p_rightspeed), slope(min, max) {}
+        rightspeed(p_rightspeed) {}
 };
 float Deg(float); /*Convert Radians to Degrees*/
 float Rad(float); /*Convert Degrees to Radians*/
@@ -234,9 +237,27 @@ extern std::ofstream G_file;
 extern std::vector<worldSpace *> G_Obstacles;
 extern worldSpace G_Position;
 
+extern BKND::pointpair TTD;
+extern BKND::pointpair TTI;
+extern BKND::pointpair ITD;
+extern BKND::pointpair DTI;
+extern BKND::pointpair DTT;
+extern BKND::pointpair ITT;
+extern BKND::pointpair TPSTP;
+extern BKND::pointpair PTTPS;
+
 template <typename T>
 void logVariable(const std::string &name, const T &value) {
   BKND::G_file << name << "=" << value << "; ";
+}
+
+template <typename T>
+void logVariables(const std::string &names, const T &value) {
+  std::istringstream iss(names);
+  std::string varName;
+  std::getline(iss, varName, ',');
+  logVariable(varName, value);
+  BKND::G_file << std::endl;
 }
 
 template <typename T, typename... Ts>
@@ -245,9 +266,10 @@ void logVariables(const std::string &names, const T &value, const Ts &...rest) {
   std::string varName;
   std::getline(iss, varName, ',');
   logVariable(varName, value);
-  if (sizeof...(rest) > 0) {
-    logVariables(names.substr(varName.length() + 1), rest...);
-  }
+
+  std::string remaining;
+  std::getline(iss, remaining);
+  logVariables(remaining, rest...);
 }
 
 #define LOG_VARS(...) logVariables(#__VA_ARGS__, __VA_ARGS__)
