@@ -1,5 +1,5 @@
 #include "../include/interface.h"
-Motors tank(3, 0, .97, 1.0, 5, 3.25);
+Motors tank(3, 0, .97, 1.0, 2, 3.25);
 Servos arm(0, BKND::P2D(315, 0), BKND::P2D(1365, 90));
 Servos claw(1, BKND::P2D(0, 0), BKND::P2D(1000, 90));
 Sensors<BKND::sensors::type::Analog> startlight(1);
@@ -15,9 +15,9 @@ int main() {
   TIMER.Run();
   VELOCITY.Run();
 
-  navigate.Face(90 - BKND::G_Position.m_Orientation, 2);
+  navigate.Face(90, 2);
   std::cout << BKND::G_Position.m_Orientation << std::endl;
-  navigate.Face(0 - BKND::G_Position.m_Orientation, 2);
+  navigate.Face(0, 2);
   tank.Brake();
   return 0;
 }

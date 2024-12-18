@@ -14,7 +14,8 @@ void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
 }
 void AngularPathfind(float p_deltal, float p_deltar, pass p_vals) {
   float wheelangle = (fabs(p_deltal) + fabs(p_deltar)) / 2;
-  float orientationoffset = wheelangle / p_vals.turnrate;
+  float orientationoffset =
+      wheelangle / (p_vals.turnrate * 1.22652); // WHYYYYYYY
 
   BKND::G_Position.m_Orientation += BKND::Deg(orientationoffset);
 }
@@ -40,13 +41,13 @@ void DynamicPathfind(float p_deltal, float p_deltar) {
 }
 void Face(float p_deg, float p_time, pass p_vals) {
   DBUG;
-  // float deltaorientation = p_deg - BKND::G_Position.m_Orientation;
-  float wheelangle = p_deg * (p_vals.turnrate);
+  float wheelangle =
+      (p_deg - BKND::G_Position.m_Orientation) * (p_vals.turnrate);
   BKND::motors::Rotation(-wheelangle, wheelangle, p_time, p_vals);
 }
 void GoTo(BKND::P2D p_goal, float p_time, pass p_vals) {
   DBUG;
-  // BKND::P2D deltaposition(p_goal - BKND::G_Position);
+  p_goal = (p_goal - BKND::G_Position);
   Face(p_goal.Angle(), (p_time * p_goal.Angle()), p_vals);
 
   BKND::motors::Brake(p_vals);
