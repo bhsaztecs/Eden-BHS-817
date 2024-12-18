@@ -54,7 +54,7 @@ public:
   float m_Orientation;
   float m_Radius;
 
-  worldSpace(float p_x = 0, float p_y = 0, float p_r = 0, float p_o = 0);
+  worldSpace(float p_x = 0, float p_y = 0, float p_o = 0, float p_r = 0);
 
   bool operator==(const worldSpace &p_other);
   bool operator!=(const worldSpace &p_other);
@@ -62,6 +62,10 @@ public:
   worldSpace operator+(const P2D &p_other);
   void operator+=(const P2D &p_other);
   void operator-=(const P2D &p_other);
+  worldSpace operator-(const worldSpace &p_other);
+  worldSpace operator+(const worldSpace &p_other);
+  void operator+=(const worldSpace &p_other);
+  void operator-=(const worldSpace &p_other);
   worldSpace operator=(const worldSpace &p_other);
 }; // namespace worldSpace:public P2D
 struct pass {
