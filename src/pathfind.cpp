@@ -47,12 +47,12 @@ void Face(float p_deg, float p_time, pass p_vals) {
 void GoTo(BKND::P2D p_goal, float p_time, pass p_vals) {
   DBUG;
   p_goal = (p_goal - BKND::G_Position);
-  Face(p_goal.Angle(), p_time, p_vals);
+  Face(p_goal.Angle(), p_time / 2, p_vals);
 
   BKND::motors::Brake(p_vals);
   msleep(10);
 
-  BKND::motors::Distance(p_goal.Magnitude(), p_goal.Magnitude(), p_time,
+  BKND::motors::Distance(p_goal.Magnitude(), p_goal.Magnitude(), p_time / 2,
                          p_vals);
 }
 } // namespace pathFind
