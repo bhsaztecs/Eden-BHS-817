@@ -6,9 +6,8 @@ BKND::pointpair DTT(BKND::P2D(0, 0), BKND::P2D(5.55, 1));
 
 BKND::pointpair ITD(BKND::P2D(0, 0), BKND::P2D(1, Deg(1.5) / 2));
 BKND::pointpair DTI(BKND::P2D(0, 0), BKND::P2D(Deg(1.5) / 2, 1));
-
-BKND::pointpair TTI(BKND::P2D(0, 0), BKND::P2D(206.49999936, 1));
-BKND::pointpair ITT(BKND::P2D(0, 0), BKND::P2D(1, 206.49999936));
+BKND::pointpair TTI(BKND::P2D(0, 0), BKND::P2D(230 / 1.0613, 1));
+BKND::pointpair ITT(BKND::P2D(0, 0), BKND::P2D(1, 230));
 
 BKND::pointpair PTTPS(BKND::P2D(0, 0), BKND::P2D(1, 15));
 BKND::pointpair TPSTP(BKND::P2D(0, 0), BKND::P2D(15, 1));

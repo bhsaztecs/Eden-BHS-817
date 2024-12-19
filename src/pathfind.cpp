@@ -14,14 +14,13 @@ void AthenaDecision(float p_deltal, float p_deltar, pass p_vals) {
 }
 void AngularPathfind(float p_deltal, float p_deltar, pass p_vals) {
   float wheelangle = (fabs(p_deltal) + fabs(p_deltar)) / 2;
-  float orientationoffset =
-      wheelangle / (p_vals.turnrate * 1.22652); // WHYYYYYYY
+  float orientationoffset = wheelangle / (p_vals.turnrate * 1.32); // WHYYYYYYY
 
   BKND::G_Position.m_Orientation += BKND::Deg(orientationoffset);
 }
 
 void LinearPathfind(float p_deltal, float p_deltar, pass p_vals) {
-  float distance = BKND::lerp(DTI, (p_deltal + p_deltar) / 2);
+  float distance = (p_deltal + p_deltar) / 2;
   BKND::P2D delta(distance * cos(BKND::Rad(BKND::G_Position.m_Orientation)),
                   distance * sin(BKND::Rad(BKND::G_Position.m_Orientation)));
 
@@ -48,13 +47,13 @@ void Face(float p_deg, float p_time, pass p_vals) {
 void GoTo(BKND::P2D p_goal, float p_time, pass p_vals) {
   DBUG;
   p_goal = (p_goal - BKND::G_Position);
-  Face(p_goal.Angle(), (p_time * p_goal.Angle()), p_vals);
+  Face(p_goal.Angle(), p_time, p_vals);
 
   BKND::motors::Brake(p_vals);
   msleep(10);
 
-  BKND::motors::Distance(p_goal.Magnitude(), p_goal.Magnitude(),
-                         p_time * p_goal.Magnitude(), p_vals);
+  BKND::motors::Distance(p_goal.Magnitude(), p_goal.Magnitude(), p_time,
+                         p_vals);
 }
 } // namespace pathFind
 } // namespace BKND
